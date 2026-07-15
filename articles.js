@@ -7,6 +7,25 @@
 
 const ARTICLES = [
   {
+    "id": "remplir-sa-box-de-crossfit-en-france-ce-qui-marche-vraiment",
+    "titre": "Remplir sa box de CrossFit en France : ce qui marche vraiment",
+    "rubrique": "Objectifs & progression",
+    "date": "2026-07-16",
+    "resume": "Acquisition, rétention, tarifs, tendances 2024 : les leviers chiffrés pour développer le nombre d'abonnés de ta salle de CrossFit en France.",
+    "url": "articles/remplir-sa-box-de-crossfit-en-france-ce-qui-marche-vraiment.html",
+    "tempsLecture": 16,
+    "tags": [
+      "gestion de box",
+      "rétention",
+      "marketing",
+      "CrossFit France",
+      "fidélisation"
+    ],
+    "emoji": "📈",
+    "image": "assets/covers/defaut.svg",
+    "imageAlt": "Barre olympique chargée posée au sol d'une salle de CrossFit"
+  },
+  {
     "id": "se-fixer-des-objectifs-qui-font-vraiment-avancer",
     "titre": "Se fixer des objectifs qui font vraiment avancer",
     "rubrique": "Objectifs & progression",
