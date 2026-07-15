@@ -1,24 +1,43 @@
 /* ============================================================
    articles.js — SOURCE DE VÉRITÉ du blog.
-   Ajouter un article = ajouter un objet ici + créer le fichier
-   HTML correspondant dans /articles/. Rien d'autre à toucher :
-   les rubriques, filtres et compteurs sont déduits de ce tableau.
+   Fichier regénéré par admin.html à chaque publication.
+   Ajouter un article à la main = ajouter un objet ici + créer
+   le fichier HTML correspondant dans /articles/.
    ============================================================ */
 
 const ARTICLES = [
   {
-    id: "bains-froids",
-    titre: "Le bain froid et le Hulk",
-    rubrique: "Récupération & santé",
-    date: "2026-07-15",            // format ISO (AAAA-MM-JJ), utilisé pour le tri
-    resume: "Ce que dit la science récente de l'immersion froide, relu pour un cycle force.",
-    url: "articles/bains-froids.html",
-    tempsLecture: 6,               // minutes
-    tags: ["froid", "récupération", "hypertrophie"],
-    emoji: "🧊",                   // optionnel : pastille de rubrique et couverture générée
-    image: "assets/covers/bains-froids.svg",  // optionnel : couverture 16:9 (sinon dégradé + emoji)
-    imageAlt: "Un petit monstre vert détendu dans un bain glacé, les mains posées sur le rebord entre les glaçons"
+    "id": "se-fixer-des-objectifs-qui-font-vraiment-avancer",
+    "titre": "Se fixer des objectifs qui font vraiment avancer",
+    "rubrique": "Objectifs & progression",
+    "date": "2026-07-16",
+    "resume": "Un objectif flou du genre \"être plus fort\" ne te fait pas progresser, il te fait juste attendre. Voici comment structurer tes objectifs pour que chaque séance ait un sens.",
+    "url": "articles/se-fixer-des-objectifs-qui-font-vraiment-avancer.html",
+    "tempsLecture": 3,
+    "tags": [
+      "objectifs",
+      "progression",
+      "suivi",
+      "motivation",
+      "planification"
+    ],
+    "emoji": "🎯"
+  },
+  {
+    "id": "bains-froids",
+    "titre": "Le bain froid et le Hulk",
+    "rubrique": "Récupération & santé",
+    "date": "2026-07-15",
+    "resume": "Ce que dit la science récente de l'immersion froide, relu pour un cycle force.",
+    "url": "articles/bains-froids.html",
+    "tempsLecture": 6,
+    "tags": [
+      "froid",
+      "récupération",
+      "hypertrophie"
+    ],
+    "emoji": "🧊",
+    "image": "assets/covers/bains-froids.svg",
+    "imageAlt": "Un petit monstre vert détendu dans un bain glacé, les mains posées sur le rebord entre les glaçons"
   }
-  // ↓ Ajouter les nouveaux articles ici (l'ordre importe peu,
-  //   la liste est triée par date décroissante à l'affichage).
 ];
