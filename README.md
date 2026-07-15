@@ -23,6 +23,28 @@ Safari sur iPhone).
 
 ## 1. Ajouter un article
 
+### Option A — depuis le site (recommandé sur téléphone)
+
+Ouvrir **`/admin.html`** sur le site publié. La page permet d'écrire un article
+avec une syntaxe simplifiée (aide intégrée), de le prévisualiser avec le vrai
+design, puis de le publier : elle committe l'article + `articles.js`
+directement dans le dépôt via l'API GitHub, et Pages redéploie tout seul.
+
+Premier usage : créer un jeton *fine-grained* sur GitHub
+(Settings → Developer settings → Fine-grained personal access tokens),
+limité au dépôt `blog`, permission **Contents : Read and write**, et le coller
+dans le bloc « 🔑 Jeton GitHub » de la page. Le jeton reste dans le
+`localStorage` du navigateur — il n'est jamais committé ni envoyé ailleurs
+qu'à l'API GitHub. Le brouillon est sauvegardé automatiquement en local.
+
+Notes : `articles.js` est **regénéré** par la page à chaque publication
+(les commentaires manuels y sont perdus) ; les articles publiés ainsi n'ont
+pas de couverture dédiée — ils utilisent la couverture générée
+(dégradé + emoji). Pour une couverture illustrée, l'ajouter ensuite à la main
+(champ `image`).
+
+### Option B — à la main (gabarit complet)
+
 ### a) Dupliquer le gabarit
 
 Copier `articles/bains-froids.html` sous un nouveau nom, par ex. `articles/sommeil-profond.html`.

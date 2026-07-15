@@ -1,0 +1,732 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Rédaction — Carnet de bord</title>
+  <meta name="robots" content="noindex">
+
+  <!-- Thème auto clair/sombre -->
+  <meta name="color-scheme" content="light dark">
+  <meta name="theme-color" media="(prefers-color-scheme: light)" content="#f7f9fb">
+  <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#0c1519">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=JetBrains+Mono:wght@400;500;700&family=Newsreader:ital,opsz,wght@0,6..72,400..700;1,6..72,400..700&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="assets/style.css">
+  <link rel="stylesheet" href="assets/article.css"><!-- pour l'aperçu -->
+
+  <style>
+    /* Styles propres à la page de rédaction */
+    .admin-wrap {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: var(--s-6) var(--s-5) var(--s-7);
+    }
+    .admin-field {
+      margin-bottom: var(--s-4);
+    }
+    .admin-field label {
+      display: block;
+      font-family: var(--font-mono);
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--text-3);
+      margin-bottom: var(--s-2);
+    }
+    .admin-field input,
+    .admin-field textarea {
+      width: 100%;
+      min-height: 48px;
+      padding: var(--s-3) var(--s-4);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-m);
+      background: var(--surface);
+      font-family: var(--font-mono);
+      font-size: 14px;
+      line-height: 1.6;
+      color: var(--text);
+    }
+    .admin-field textarea {
+      resize: vertical;
+    }
+    #contenu { min-height: 320px; }
+    .admin-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--s-4);
+    }
+    @media (max-width: 560px) {
+      .admin-row { grid-template-columns: 1fr; }
+    }
+    .admin-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--s-3);
+      margin: var(--s-5) 0;
+    }
+    .btn {
+      min-height: 48px;
+      padding: var(--s-3) var(--s-5);
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--text);
+      font-family: var(--font-mono);
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .btn.primaire {
+      background: var(--accent-dark);
+      border-color: var(--accent-dark);
+      color: #ffffff;
+    }
+    @media (prefers-color-scheme: dark) {
+      .btn.primaire { color: #0c1519; }
+    }
+    .btn:disabled { opacity: 0.5; cursor: wait; }
+    .journal {
+      font-family: var(--font-mono);
+      font-size: 13px;
+      line-height: 1.8;
+      color: var(--text-2);
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-m);
+      padding: var(--s-3) var(--s-4);
+      margin-top: var(--s-4);
+      white-space: pre-wrap;
+      display: none;
+    }
+    .journal.visible { display: block; }
+    .journal .erreur { color: var(--danger); }
+    details.aide, details.jeton {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-m);
+      padding: var(--s-3) var(--s-4);
+      margin-bottom: var(--s-5);
+      font-size: 15px;
+      color: var(--text-2);
+    }
+    details summary {
+      cursor: pointer;
+      font-family: var(--font-mono);
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text);
+      min-height: 32px;
+    }
+    details.aide code {
+      font-family: var(--font-mono);
+      font-size: 12.5px;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 1px 5px;
+    }
+    #apercu {
+      display: none;
+      border-top: 2px dashed var(--border);
+      margin-top: var(--s-6);
+      padding-top: var(--s-5);
+    }
+    #apercu.visible { display: block; }
+    .apercu-titre {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--retenir);
+      margin-bottom: var(--s-4);
+    }
+  </style>
+</head>
+<body>
+
+  <div class="admin-wrap">
+    <nav aria-label="Fil d'Ariane">
+      <a href="index.html" class="back-link">← Retour à l’accueil</a>
+    </nav>
+
+    <header class="masthead">
+      <p class="kicker">Coulisses</p>
+      <h1 class="article-title" style="font-size: clamp(28px, 7vw, 40px);">Rédaction</h1>
+      <p class="standfirst">Écris, prévisualise, publie — directement depuis le téléphone.</p>
+    </header>
+
+    <!-- Jeton GitHub (stocké uniquement dans CE navigateur) -->
+    <details class="jeton" id="blocJeton">
+      <summary>🔑 Jeton GitHub</summary>
+      <p>Crée un jeton <em>fine-grained</em> sur GitHub (Settings → Developer settings →
+      Fine-grained tokens) limité au dépôt <strong>blog</strong> avec la permission
+      <strong>Contents : Read and write</strong>, puis colle-le ici.
+      Il reste stocké dans ce navigateur uniquement.</p>
+      <div class="admin-field">
+        <label for="jeton">Jeton</label>
+        <input type="password" id="jeton" autocomplete="off" placeholder="github_pat_…">
+      </div>
+      <button type="button" class="btn" id="btnJeton">Enregistrer le jeton</button>
+      <button type="button" class="btn" id="btnJetonOubli">Oublier</button>
+    </details>
+
+    <details class="aide">
+      <summary>✍️ Syntaxe du contenu</summary>
+      <p>
+        <code>## Label | Titre de section</code> — nouvelle section (numérotée automatiquement)<br>
+        <code>==texte==</code> surligné bleu · <code>==!texte==</code> rouge · <code>==+texte==</code> vert<br>
+        <code>*italique*</code> · <code>[lien](https://…)</code><br>
+        <code>&gt; citation</code> — pull-quote<br>
+        <code>!tip Conseil pratique…</code> — encart note<br>
+        <code>!chiffre 10–15 °C | Fenêtre cible | Petite légende</code> — chiffre-clé
+        (tons : <code>!chiffre!</code> rouge, <code>!chiffre+</code> vert, <code>!chiffre~</code> jaune)<br>
+        <code>!faire item ; item</code> puis <code>!eviter item ; item</code> — comparatif<br>
+        <code>!recap Ton protocole | Clé =&gt; Valeur ; Clé =&gt; Valeur</code> — tableau<br>
+        <code>!source Label | https://…</code> — source en pied d'article
+      </p>
+    </details>
+
+    <form id="formulaire" autocomplete="off">
+      <div class="admin-field">
+        <label for="titre">Titre *</label>
+        <input type="text" id="titre" required placeholder="Le bain froid et le Hulk">
+      </div>
+      <div class="admin-row">
+        <div class="admin-field">
+          <label for="rubrique">Rubrique *</label>
+          <input type="text" id="rubrique" list="rubriques" required placeholder="Récupération & santé">
+          <datalist id="rubriques"></datalist>
+        </div>
+        <div class="admin-field">
+          <label for="emoji">Emoji</label>
+          <input type="text" id="emoji" maxlength="4" placeholder="🧊">
+        </div>
+      </div>
+      <div class="admin-field">
+        <label for="resume">Résumé (carte d'accueil) *</label>
+        <textarea id="resume" rows="2" required placeholder="Une ou deux phrases affichées sur la carte."></textarea>
+      </div>
+      <div class="admin-field">
+        <label for="chapo">Chapô (sous le titre de l'article) *</label>
+        <textarea id="chapo" rows="2" required placeholder="1–2 phrases d'accroche."></textarea>
+      </div>
+      <div class="admin-row">
+        <div class="admin-field">
+          <label for="kicker">Kicker (sur-titre)</label>
+          <input type="text" id="kicker" placeholder="Dossier récupération">
+        </div>
+        <div class="admin-field">
+          <label for="tags">Tags (séparés par des virgules)</label>
+          <input type="text" id="tags" placeholder="froid, récupération">
+        </div>
+      </div>
+      <div class="admin-field">
+        <label for="contenu">Contenu *</label>
+        <textarea id="contenu" required placeholder="Premier paragraphe (lettrine automatique)…
+
+## Le dosage | Froid, oui. Congélation, non.
+Un paragraphe avec un ==chiffre surligné==.
+
+!chiffre 10–15 °C | Fenêtre cible | La plage la plus étudiée."></textarea>
+      </div>
+
+      <div class="admin-actions">
+        <button type="button" class="btn" id="btnApercu">👀 Aperçu</button>
+        <button type="submit" class="btn primaire" id="btnPublier">🚀 Publier</button>
+      </div>
+    </form>
+
+    <div class="journal" id="journal" role="status" aria-live="polite"></div>
+
+    <section id="apercu" aria-label="Aperçu de l'article">
+      <p class="apercu-titre">Aperçu</p>
+      <div class="article-wrap" id="apercuContenu" style="padding: 0;"></div>
+    </section>
+  </div>
+
+  <script src="articles.js"></script>
+  <script>
+    (function () {
+      "use strict";
+
+      var DEPOT = "crossfithygie-collab/blog";
+      var API = "https://api.github.com/repos/" + DEPOT + "/contents/";
+      var CLE_JETON = "carnet_jeton_github";
+      var CLE_BROUILLON = "carnet_brouillon";
+      var CHAMPS = ["titre", "rubrique", "emoji", "resume", "chapo", "kicker", "tags", "contenu"];
+
+      var $ = function (id) { return document.getElementById(id); };
+
+      /* ======================================================
+         Utilitaires
+         ====================================================== */
+      function esc(s) {
+        return s.replace(/&/g, "&amp;").replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+      }
+
+      /* Titre → id kebab-case sans accents */
+      function slugifier(s) {
+        return s.toLowerCase()
+          .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+          .replace(/[^a-z0-9]+/g, "-")
+          .replace(/^-+|-+$/g, "")
+          .slice(0, 60);
+      }
+
+      /* Encodage base64 UTF-8 (btoa seul casse sur les accents) */
+      function base64utf8(s) {
+        var octets = new TextEncoder().encode(s);
+        var bin = "";
+        octets.forEach(function (o) { bin += String.fromCharCode(o); });
+        return btoa(bin);
+      }
+
+      function dateISO() {
+        var d = new Date();
+        return d.getFullYear() + "-" +
+          String(d.getMonth() + 1).padStart(2, "0") + "-" +
+          String(d.getDate()).padStart(2, "0");
+      }
+
+      var formatFR = new Intl.DateTimeFormat("fr-FR", { day: "numeric", month: "long", year: "numeric" });
+
+      /* ======================================================
+         Mise en forme inline : échappe PUIS pose les balises
+         ====================================================== */
+      function inline(s) {
+        return esc(s)
+          .replace(/\[([^\]]+)\]\((https?:[^)\s]+)\)/g, '<a href="$2" target="_blank" rel="noopener">$1</a>')
+          .replace(/==!([^=]+)==/g, '<mark class="attention">$1</mark>')
+          .replace(/==\+([^=]+)==/g, '<mark class="positif">$1</mark>')
+          .replace(/==([^=]+)==/g, "<mark>$1</mark>")
+          .replace(/\*([^*\n]+)\*/g, "<em>$1</em>");
+      }
+
+      /* ======================================================
+         Compilation du contenu → corps d'article HTML
+         ====================================================== */
+      function compiler(texte) {
+        var lignes = texte.replace(/\r/g, "").split("\n");
+        var sections = [];        // { label, titre, blocs: [] }
+        var intro = [];           // blocs avant la première section
+        var sources = [];
+        var pendingFaire = null, pendingEviter = null;
+        var premierePara = true;
+        var i = 0;
+
+        function blocsCourants() {
+          return sections.length ? sections[sections.length - 1].blocs : intro;
+        }
+
+        function flushComparatif() {
+          if (!pendingFaire && !pendingEviter) return;
+          var html = '<div class="comparatif">';
+          if (pendingFaire) {
+            html += '<div class="colonne faire"><h3>À faire</h3><ul>' +
+              pendingFaire.map(function (x) { return "<li>" + inline(x) + "</li>"; }).join("") +
+              "</ul></div>";
+          }
+          if (pendingEviter) {
+            html += '<div class="colonne eviter"><h3>À éviter</h3><ul>' +
+              pendingEviter.map(function (x) { return "<li>" + inline(x) + "</li>"; }).join("") +
+              "</ul></div>";
+          }
+          html += "</div>";
+          blocsCourants().push(html);
+          pendingFaire = pendingEviter = null;
+        }
+
+        while (i < lignes.length) {
+          var l = lignes[i].trim();
+
+          if (!l) { i++; continue; }
+
+          /* Nouvelle section : ## Label | Titre  (ou juste ## Titre) */
+          if (l.indexOf("## ") === 0) {
+            flushComparatif();
+            var reste = l.slice(3);
+            var sep = reste.indexOf("|");
+            sections.push({
+              label: sep > -1 ? reste.slice(0, sep).trim() : "",
+              titre: sep > -1 ? reste.slice(sep + 1).trim() : reste.trim(),
+              blocs: []
+            });
+            i++; continue;
+          }
+
+          /* Pull-quote : lignes consécutives commençant par > */
+          if (l.indexOf(">") === 0) {
+            flushComparatif();
+            var cit = [];
+            while (i < lignes.length && lignes[i].trim().indexOf(">") === 0) {
+              cit.push(lignes[i].trim().replace(/^>\s?/, ""));
+              i++;
+            }
+            blocsCourants().push('<blockquote class="pull-quote"><p>' + inline(cit.join(" ")) + "</p></blockquote>");
+            continue;
+          }
+
+          /* Directives !xxx */
+          var mChiffre = l.match(/^!chiffre([!+~])?\s+(.+)$/);
+          if (mChiffre) {
+            flushComparatif();
+            var ton = { "!": " attention", "+": " positif", "~": " retenir" }[mChiffre[1]] || "";
+            var parts = mChiffre[2].split("|").map(function (x) { return x.trim(); });
+            blocsCourants().push(
+              '<div class="keydata' + ton + '">' +
+              '<span class="mono-label">' + inline(parts[1] || "Chiffre-clé") + "</span>" +
+              '<p class="chiffre">' + inline(parts[0] || "") + "</p>" +
+              (parts[2] ? '<p class="legende">' + inline(parts[2]) + "</p>" : "") +
+              "</div>");
+            i++; continue;
+          }
+
+          if (l.indexOf("!tip ") === 0) {
+            flushComparatif();
+            blocsCourants().push(
+              '<aside class="tip"><span class="mono-label">Note pratique</span><p>' +
+              inline(l.slice(5)) + "</p></aside>");
+            i++; continue;
+          }
+
+          if (l.indexOf("!faire ") === 0) {
+            pendingFaire = l.slice(7).split(";").map(function (x) { return x.trim(); }).filter(Boolean);
+            i++; continue;
+          }
+          if (l.indexOf("!eviter ") === 0) {
+            pendingEviter = l.slice(8).split(";").map(function (x) { return x.trim(); }).filter(Boolean);
+            flushComparatif();
+            i++; continue;
+          }
+
+          if (l.indexOf("!recap ") === 0) {
+            flushComparatif();
+            var sepR = l.indexOf("|");
+            var titreR = sepR > -1 ? l.slice(7, sepR).trim() : "Récapitulatif";
+            var corpsR = sepR > -1 ? l.slice(sepR + 1) : "";
+            var rangs = corpsR.split(";").map(function (r) {
+              var kv = r.split("=>");
+              if (kv.length < 2) return "";
+              return '<tr><th scope="row">' + inline(kv[0].trim()) + "</th><td>" + inline(kv.slice(1).join("=>").trim()) + "</td></tr>";
+            }).join("");
+            blocsCourants().push(
+              '<div class="recap"><table><caption>' + inline(titreR) + "</caption><tbody>" + rangs + "</tbody></table></div>");
+            i++; continue;
+          }
+
+          if (l.indexOf("!source ") === 0) {
+            var sepS = l.indexOf("|");
+            if (sepS > -1) {
+              sources.push({ label: l.slice(8, sepS).trim(), url: l.slice(sepS + 1).trim() });
+            }
+            i++; continue;
+          }
+
+          /* Paragraphe : lignes pleines consécutives */
+          flushComparatif();
+          var para = [];
+          while (i < lignes.length && lignes[i].trim() &&
+                 !/^(## |> |!chiffre|!tip |!faire |!eviter |!recap |!source )/.test(lignes[i].trim())) {
+            para.push(lignes[i].trim());
+            i++;
+          }
+          var cls = premierePara ? ' class="dropcap"' : "";
+          premierePara = false;
+          blocsCourants().push("<p" + cls + ">" + inline(para.join(" ")) + "</p>");
+        }
+        flushComparatif();
+
+        /* Assemblage : intro + sections numérotées */
+        var html = intro.join("\n");
+        sections.forEach(function (s, idx) {
+          var num = String(idx + 1).padStart(2, "0");
+          html += '\n<hr class="section-sep">\n<section>\n' +
+            '<p class="section-label">' + num + (s.label ? " — " + inline(s.label) : "") + "</p>\n" +
+            '<h2 class="section-title">' + inline(s.titre) + "</h2>\n" +
+            s.blocs.join("\n") + "\n</section>";
+        });
+
+        var nbMots = texte.replace(/[#>!|=*;]/g, " ").split(/\s+/).filter(Boolean).length;
+        return { html: html, sources: sources, minutes: Math.max(1, Math.round(nbMots / 200)) };
+      }
+
+      /* ======================================================
+         Gabarit d'article complet (miroir de bains-froids.html)
+         ====================================================== */
+      function genererArticle(d, compile) {
+        var sourcesHtml = compile.sources.map(function (s) {
+          return '          <li><a href="' + esc(s.url) + '" target="_blank" rel="noopener">' + esc(s.label) + "</a></li>";
+        }).join("\n");
+
+        return '<!DOCTYPE html>\n<html lang="fr">\n<head>\n' +
+          '  <meta charset="UTF-8">\n' +
+          '  <meta name="viewport" content="width=device-width, initial-scale=1.0">\n' +
+          "  <title>" + esc(d.titre) + " — Carnet de bord</title>\n" +
+          '  <meta name="description" content="' + esc(d.resume) + '">\n\n' +
+          '  <meta name="color-scheme" content="light dark">\n' +
+          '  <meta name="theme-color" media="(prefers-color-scheme: light)" content="#f7f9fb">\n' +
+          '  <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#0c1519">\n\n' +
+          '  <link rel="preconnect" href="https://fonts.googleapis.com">\n' +
+          '  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>\n' +
+          '  <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=JetBrains+Mono:wght@400;500;700&family=Newsreader:ital,opsz,wght@0,6..72,400..700;1,6..72,400..700&display=swap" rel="stylesheet">\n\n' +
+          '  <link rel="stylesheet" href="../assets/style.css">\n' +
+          '  <link rel="stylesheet" href="../assets/article.css">\n' +
+          "</head>\n<body>\n\n" +
+          '  <div class="progress-track" aria-hidden="true">\n    <div class="progress-bar" id="progress"></div>\n  </div>\n\n' +
+          '  <div class="article-wrap">\n\n' +
+          '    <nav aria-label="Fil d\'Ariane">\n      <a href="../index.html" class="back-link">← Retour à l’accueil</a>\n    </nav>\n\n' +
+          "    <article>\n\n" +
+          '      <header class="masthead">\n' +
+          '        <p class="kicker">' + esc(d.kicker) + "</p>\n" +
+          '        <h1 class="article-title">' + esc(d.titre) + "</h1>\n" +
+          '        <p class="standfirst">' + esc(d.chapo) + "</p>\n" +
+          '        <div class="byline">\n' +
+          '          <time datetime="' + d.date + '">' + formatFR.format(new Date(d.date + "T12:00:00")) + "</time>\n" +
+          "          <span>" + compile.minutes + " min de lecture</span>\n" +
+          "        </div>\n      </header>\n\n" +
+          compile.html + "\n\n" +
+          '      <footer class="article-footer">\n' +
+          (sourcesHtml
+            ? '        <span class="mono-label">Sources</span>\n        <ul class="sources">\n' + sourcesHtml + "\n        </ul>\n"
+            : "") +
+          '        <p class="disclaimer">Contenu informatif rédigé par un passionné, pas un avis médical ni un programme individualisé. En cas de doute ou de pathologie, demande l’avis d’un professionnel de santé.</p>\n' +
+          "      </footer>\n\n    </article>\n  </div>\n\n" +
+          "  <script>\n" +
+          '    (function () {\n      "use strict";\n' +
+          '      var bar = document.getElementById("progress");\n      var maxScroll = 1;\n' +
+          "      function recalculer() {\n        maxScroll = Math.max(document.documentElement.scrollHeight - window.innerHeight, 1);\n        peindre();\n      }\n" +
+          "      function peindre() {\n        var ratio = Math.min(window.scrollY / maxScroll, 1);\n" +
+          '        bar.style.transform = "scaleX(" + ratio + ")";\n      }\n' +
+          '      window.addEventListener("scroll", peindre, { passive: true });\n' +
+          '      window.addEventListener("resize", recalculer);\n' +
+          '      window.addEventListener("load", recalculer);\n      recalculer();\n    })();\n' +
+          "  <\/script>\n</body>\n</html>\n";
+      }
+
+      /* ======================================================
+         Regénération d'articles.js avec la nouvelle entrée
+         ====================================================== */
+      function genererArticlesJs(liste) {
+        return "/* ============================================================\n" +
+          "   articles.js — SOURCE DE VÉRITÉ du blog.\n" +
+          "   Fichier regénéré par admin.html à chaque publication.\n" +
+          "   Ajouter un article à la main = ajouter un objet ici + créer\n" +
+          "   le fichier HTML correspondant dans /articles/.\n" +
+          "   ============================================================ */\n\n" +
+          "const ARTICLES = " + JSON.stringify(liste, null, 2) + ";\n";
+      }
+
+      /* ======================================================
+         Lecture du formulaire
+         ====================================================== */
+      function lireFormulaire() {
+        var titre = $("titre").value.trim();
+        var rubrique = $("rubrique").value.trim();
+        return {
+          titre: titre,
+          id: slugifier(titre),
+          rubrique: rubrique,
+          emoji: $("emoji").value.trim() || "📝",
+          resume: $("resume").value.trim(),
+          chapo: $("chapo").value.trim(),
+          kicker: $("kicker").value.trim() || ("Dossier " + rubrique.toLowerCase()),
+          tags: $("tags").value.split(",").map(function (t) { return t.trim(); }).filter(Boolean),
+          contenu: $("contenu").value,
+          date: dateISO()
+        };
+      }
+
+      /* ======================================================
+         Aperçu en direct
+         ====================================================== */
+      function afficherApercu() {
+        var d = lireFormulaire();
+        var c = compiler(d.contenu);
+        var sourcesHtml = c.sources.map(function (s) {
+          return '<li><a href="' + esc(s.url) + '" target="_blank" rel="noopener">' + esc(s.label) + "</a></li>";
+        }).join("");
+        $("apercuContenu").innerHTML =
+          '<article><header class="masthead">' +
+          '<p class="kicker">' + esc(d.kicker) + "</p>" +
+          '<h1 class="article-title">' + esc(d.titre || "Sans titre") + "</h1>" +
+          '<p class="standfirst">' + esc(d.chapo) + "</p>" +
+          '<div class="byline"><time datetime="' + d.date + '">' + formatFR.format(new Date(d.date + "T12:00:00")) + "</time>" +
+          "<span>" + c.minutes + " min de lecture</span></div></header>" +
+          c.html +
+          (sourcesHtml ? '<footer class="article-footer"><span class="mono-label">Sources</span><ul class="sources">' + sourcesHtml + "</ul></footer>" : "") +
+          "</article>";
+        $("apercu").classList.add("visible");
+      }
+
+      /* ======================================================
+         Appels API GitHub
+         ====================================================== */
+      function api(chemin, options) {
+        options = options || {};
+        options.headers = {
+          "Authorization": "Bearer " + localStorage.getItem(CLE_JETON),
+          "Accept": "application/vnd.github+json"
+        };
+        return fetch(API + chemin, Object.assign({}, options, {
+          method: options.method || "GET",
+          headers: options.headers,
+          body: options.body ? JSON.stringify(options.body) : undefined
+        }));
+      }
+
+      var journalEl = $("journal");
+      function log(msg, erreur) {
+        journalEl.classList.add("visible");
+        var ligne = document.createElement("div");
+        if (erreur) ligne.className = "erreur";
+        ligne.textContent = msg;
+        journalEl.appendChild(ligne);
+      }
+
+      /* ======================================================
+         Publication : article HTML puis articles.js
+         ====================================================== */
+      async function publier(ev) {
+        ev.preventDefault();
+        journalEl.innerHTML = "";
+
+        if (!localStorage.getItem(CLE_JETON)) {
+          $("blocJeton").open = true;
+          log("⚠ Enregistre d'abord ton jeton GitHub (bloc 🔑 ci-dessus).", true);
+          return;
+        }
+
+        var d = lireFormulaire();
+        if (!d.titre || !d.rubrique || !d.resume || !d.chapo || !d.contenu.trim()) {
+          log("⚠ Remplis tous les champs marqués *.", true);
+          return;
+        }
+        if (!d.id) { log("⚠ Titre invalide (aucun caractère utilisable).", true); return; }
+
+        var btn = $("btnPublier");
+        btn.disabled = true;
+
+        try {
+          /* 1. L'id est-il libre ? (dans le fichier distant à jour) */
+          log("→ Lecture d'articles.js sur GitHub…");
+          var rep = await api("articles.js");
+          if (!rep.ok) throw new Error("articles.js introuvable (HTTP " + rep.status + ") — jeton invalide ou permissions insuffisantes ?");
+          var fichier = await rep.json();
+          var texteActuel = decodeURIComponent(escape(atob(fichier.content.replace(/\n/g, ""))));
+          var listeActuelle = new Function(texteActuel + "; return ARTICLES;")();
+          if (listeActuelle.some(function (a) { return a.id === d.id; })) {
+            throw new Error("L'id « " + d.id + " » existe déjà — change le titre.");
+          }
+
+          /* 2. Créer le fichier de l'article */
+          var c = compiler(d.contenu);
+          log("→ Création d'articles/" + d.id + ".html…");
+          var repArticle = await api("articles/" + d.id + ".html", {
+            method: "PUT",
+            body: {
+              message: "Article : " + d.titre,
+              content: base64utf8(genererArticle(d, c))
+            }
+          });
+          if (!repArticle.ok) throw new Error("Échec de création de l'article (HTTP " + repArticle.status + ")");
+          log("✓ Article créé.");
+
+          /* 3. Mettre à jour articles.js (avec son sha pour éviter d'écraser) */
+          var entree = {
+            id: d.id, titre: d.titre, rubrique: d.rubrique, date: d.date,
+            resume: d.resume, url: "articles/" + d.id + ".html",
+            tempsLecture: c.minutes, tags: d.tags, emoji: d.emoji
+          };
+          listeActuelle.unshift(entree);
+          log("→ Mise à jour d'articles.js…");
+          var repListe = await api("articles.js", {
+            method: "PUT",
+            body: {
+              message: "Référence l'article : " + d.titre,
+              content: base64utf8(genererArticlesJs(listeActuelle)),
+              sha: fichier.sha
+            }
+          });
+          if (!repListe.ok) throw new Error("Article créé, mais échec de mise à jour d'articles.js (HTTP " + repListe.status + ") — réessaie la publication.");
+          log("✓ articles.js mis à jour.");
+
+          /* 4. Attendre le déploiement Pages (uniquement depuis le site publié) */
+          localStorage.removeItem(CLE_BROUILLON);
+          if (location.hostname.indexOf("github.io") > -1) {
+            log("⏳ Déploiement GitHub Pages en cours (1–2 min)…");
+            var url = "articles/" + d.id + ".html";
+            for (var t = 0; t < 16; t++) {
+              await new Promise(function (r) { setTimeout(r, 10000); });
+              var ping = await fetch(url, { cache: "no-store", method: "HEAD" });
+              if (ping.ok) {
+                log("✓ En ligne ! " + location.origin + location.pathname.replace("admin.html", "") + url);
+                btn.disabled = false;
+                return;
+              }
+            }
+            log("ℹ Toujours en déploiement — l'article apparaîtra d'ici quelques minutes.");
+          } else {
+            log("✓ Publié ! Le site se met à jour d'ici 1–2 min (build GitHub Pages).");
+          }
+        } catch (e) {
+          log("✗ " + e.message, true);
+        } finally {
+          btn.disabled = false;
+        }
+      }
+
+      /* ======================================================
+         Jeton, brouillon auto, datalist des rubriques
+         ====================================================== */
+      $("btnJeton").addEventListener("click", function () {
+        var v = $("jeton").value.trim();
+        if (!v) { log("⚠ Colle un jeton avant d'enregistrer.", true); return; }
+        localStorage.setItem(CLE_JETON, v);
+        $("jeton").value = "";
+        $("blocJeton").open = false;
+        log("✓ Jeton enregistré dans ce navigateur.");
+      });
+      $("btnJetonOubli").addEventListener("click", function () {
+        localStorage.removeItem(CLE_JETON);
+        log("✓ Jeton oublié.");
+      });
+
+      /* Rubriques existantes → suggestions */
+      var rubs = {};
+      (typeof ARTICLES !== "undefined" ? ARTICLES : []).forEach(function (a) { rubs[a.rubrique] = 1; });
+      Object.keys(rubs).sort().forEach(function (r) {
+        var o = document.createElement("option");
+        o.value = r;
+        $("rubriques").appendChild(o);
+      });
+
+      /* Brouillon : sauvegarde auto + restauration */
+      try {
+        var brouillon = JSON.parse(localStorage.getItem(CLE_BROUILLON) || "null");
+        if (brouillon) CHAMPS.forEach(function (ch) { if (brouillon[ch]) $(ch).value = brouillon[ch]; });
+      } catch (e) { /* brouillon corrompu : on repart à zéro */ }
+
+      var minuteur = null;
+      $("formulaire").addEventListener("input", function () {
+        clearTimeout(minuteur);
+        minuteur = setTimeout(function () {
+          var b = {};
+          CHAMPS.forEach(function (ch) { b[ch] = $(ch).value; });
+          localStorage.setItem(CLE_BROUILLON, JSON.stringify(b));
+          if ($("apercu").classList.contains("visible")) afficherApercu();
+        }, 400);
+      });
+
+      $("btnApercu").addEventListener("click", afficherApercu);
+      $("formulaire").addEventListener("submit", publier);
+    })();
+  </script>
+</body>
+</html>
