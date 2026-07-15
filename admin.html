@@ -739,8 +739,18 @@ Un paragraphe avec un ==chiffre surligné==.
          ====================================================== */
       function promptGeneration(sujet, consignes, rubriques) {
         return "Tu écris pour « Carnet de bord », le blog personnel d'un coach et gérant de salle de CrossFit. " +
-          "Ton : tutoiement, direct, concret, imagé mais rigoureux ; public : pratiquants et coachs. " +
-          "Contenu plausible et honnête, chiffres réalistes, pas de promesses miracles.\n\n" +
+          "Ton : tutoiement, direct, concret, imagé mais rigoureux ; public : pratiquants et coachs.\n\n" +
+          "EXIGENCES DE FOND (non négociables) :\n" +
+          "- Chaque affirmation importante s'appuie sur du CONCRET : étude scientifique (auteurs, année, revue, " +
+          "et si pertinent taille d'échantillon et ampleur d'effet), méta-analyse, donnée statistique chiffrée, " +
+          "ou repère de terrain quantifié. Pas de généralités creuses type « des études montrent que ».\n" +
+          "- Rédaction DÉVELOPPÉE et détaillée : explique les mécanismes (physiologie, psychologie, logistique), " +
+          "les ordres de grandeur, les nuances et les limites des données (populations étudiées, protocoles, " +
+          "controverses éventuelles), puis l'application pratique précise (charges, fréquences, durées, seuils).\n" +
+          "- 1200 à 1800 mots. Chaque section fait plusieurs paragraphes denses (150 à 300 mots), " +
+          "pas des paragraphes d'une phrase.\n" +
+          "- Si tu n'es pas sûr d'un chiffre exact, donne une fourchette honnête plutôt qu'une fausse précision. " +
+          "Cite les études dans le texte (auteurs + année) même quand tu ne fournis pas de lien.\n\n" +
           "SUJET DE L'ARTICLE : " + sujet + "\n" +
           (consignes ? "CONSIGNES SUPPLÉMENTAIRES : " + consignes + "\n" : "") +
           "RUBRIQUES EXISTANTES (réutilise-en une si elle colle, chaîne identique) : " +
@@ -755,11 +765,13 @@ Un paragraphe avec un ==chiffre surligné==.
           "- `!faire item ; item` puis `!eviter item ; item`\n" +
           "- `!recap Titre | Clé => Valeur ; Clé => Valeur`\n" +
           "- `!source Label | https://url`\n\n" +
-          "Attendu : 700 à 1100 mots, 4 à 6 sections, un paragraphe d'intro AVANT la première section, " +
-          "2 à 4 `!chiffre` de tons variés, 1 `!tip`, 1 comparatif faire/éviter, 1 `!recap` en dernière section, " +
-          "1 ou 2 pull-quotes, des surlignages sur les faits marquants. " +
-          "Sources : uniquement des références dont tu es certain qu'elles existent (PubMed, etc.) ; " +
-          "en cas de doute, n'en mets pas plutôt que d'inventer une URL.\n\n" +
+          "Structure attendue : 5 à 7 sections, un paragraphe d'intro AVANT la première section, " +
+          "3 à 5 `!chiffre` de tons variés (chacun adossé à une donnée sourcée du texte), 1 ou 2 `!tip`, " +
+          "1 comparatif faire/éviter, 1 `!recap` en dernière section, 1 ou 2 pull-quotes, " +
+          "des surlignages `==…==` sur les chiffres et faits marquants dans les phrases. " +
+          "Sources en pied d'article (`!source`) : 2 à 5 références réelles dont tu es certain qu'elles existent " +
+          "(PubMed, DOI…) ; en cas de doute sur l'URL exacte, cite l'étude dans le texte (auteurs + année + revue) " +
+          "sans lien plutôt que d'inventer une URL.\n\n" +
           "Réponds UNIQUEMENT avec un objet JSON (aucun texte autour, pas de bloc de code) :\n" +
           '{"titre": "…", "rubrique": "…", "emoji": "un seul emoji", "resume": "1-2 phrases pour la carte", ' +
           '"chapo": "1-2 phrases d\'accroche", "kicker": "sur-titre court", "tags": ["3 à 5 tags"], "contenu": "…"}';
@@ -777,7 +789,7 @@ Un paragraphe avec un ==chiffre surligné==.
 
         var btn = $("btnGenerer");
         btn.disabled = true;
-        log("✨ Génération en cours (30 s à 1 min)…");
+        log("✨ Génération en cours (article détaillé : 1 à 2 min)…");
 
         try {
           var rep = await fetch("https://api.anthropic.com/v1/messages", {
@@ -790,7 +802,7 @@ Un paragraphe avec un ==chiffre surligné==.
             },
             body: JSON.stringify({
               model: "claude-sonnet-5",
-              max_tokens: 6000,
+              max_tokens: 9000,
               messages: [{ role: "user", content: promptGeneration(sujet, $("consignes").value.trim(), Object.keys(rubs)) }]
             })
           });
