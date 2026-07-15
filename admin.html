@@ -522,6 +522,7 @@ Un paragraphe avec un ==chiffre surligné==.
           '  <div class="article-wrap">\n\n' +
           '    <nav aria-label="Fil d\'Ariane">\n      <a href="../index.html" class="back-link">← Retour à l’accueil</a>\n    </nav>\n\n' +
           "    <article>\n\n" +
+          '      <img class="article-cover" src="../assets/covers/defaut.svg" alt="Illustration : barre olympique chargée posée au sol d\'une salle de CrossFit">\n\n' +
           '      <header class="masthead">\n' +
           '        <p class="kicker">' + esc(d.kicker) + "</p>\n" +
           '        <h1 class="article-title">' + esc(d.titre) + "</h1>\n" +
@@ -689,7 +690,9 @@ Un paragraphe avec un ==chiffre surligné==.
           var entree = {
             id: d.id, titre: d.titre, rubrique: d.rubrique, date: d.date,
             resume: d.resume, url: "articles/" + d.id + ".html",
-            tempsLecture: c.minutes, tags: d.tags, emoji: d.emoji
+            tempsLecture: c.minutes, tags: d.tags, emoji: d.emoji,
+            image: "assets/covers/defaut.svg",
+            imageAlt: "Barre olympique chargée posée au sol d'une salle de CrossFit"
           };
           listeActuelle.unshift(entree);
           log("→ Mise à jour d'articles.js…");

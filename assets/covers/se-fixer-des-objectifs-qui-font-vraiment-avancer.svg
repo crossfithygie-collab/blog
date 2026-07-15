@@ -1,0 +1,88 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 450" role="img" aria-label="Illustration : tableau blanc de box de CrossFit avec une progression en barres ascendantes vers une cible, disques empilés et kettlebell au sol">
+  <defs>
+    <linearGradient id="ciel" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#1d3d5c"/>
+      <stop offset="1" stop-color="#0e1c28"/>
+    </linearGradient>
+    <radialGradient id="halo" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0" stop-color="#e0a000" stop-opacity="0.28"/>
+      <stop offset="1" stop-color="#e0a000" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="fonte" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#2b455c"/>
+      <stop offset="1" stop-color="#101d29"/>
+    </linearGradient>
+    <filter id="grain">
+      <feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="2" stitchTiles="stitch"/>
+      <feColorMatrix type="matrix" values="0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 0.05 0"/>
+    </filter>
+  </defs>
+
+  <!-- Fond de salle -->
+  <rect width="800" height="450" fill="url(#ciel)"/>
+  <ellipse cx="400" cy="190" rx="300" ry="180" fill="url(#halo)"/>
+
+  <!-- Rig en arrière-plan -->
+  <g fill="#21405a">
+    <rect x="40" y="52" width="720" height="12" rx="4"/>
+    <rect x="82" y="52" width="14" height="250" rx="4"/>
+    <rect x="700" y="52" width="14" height="250" rx="4"/>
+  </g>
+
+  <!-- Sol -->
+  <rect x="0" y="372" width="800" height="78" fill="#0a141d"/>
+  <line x1="0" y1="372" x2="800" y2="372" stroke="#274965" stroke-width="3"/>
+
+  <!-- Ombres portées -->
+  <ellipse cx="150" cy="416" rx="105" ry="13" fill="#000000" opacity="0.35"/>
+  <ellipse cx="655" cy="408" rx="85" ry="12" fill="#000000" opacity="0.35"/>
+
+  <!-- Tableau blanc de box -->
+  <g>
+    <rect x="180" y="76" width="440" height="258" rx="14" fill="#eef4f8" stroke="#c6d3dc" stroke-width="4"/>
+    <rect x="310" y="334" width="180" height="12" rx="6" fill="#c6d3dc"/>
+    <!-- axe -->
+    <line x1="218" y1="302" x2="580" y2="302" stroke="#c6d3dc" stroke-width="4" stroke-linecap="round"/>
+    <!-- barres de progression -->
+    <rect x="230" y="238" width="52" height="64" rx="8" fill="#ff6b4a"/>
+    <rect x="312" y="202" width="52" height="100" rx="8" fill="#e0a000"/>
+    <rect x="394" y="162" width="52" height="140" rx="8" fill="#2ba8e0"/>
+    <rect x="476" y="120" width="52" height="182" rx="8" fill="#2fb872"/>
+    <!-- flèche de tendance -->
+    <polyline points="256,226 338,190 420,150 496,116" fill="none" stroke="#14232e" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+    <polygon points="516,106 496,102 502,122" fill="#14232e"/>
+    <!-- cible -->
+    <circle cx="556" cy="110" r="24" fill="#ffffff" stroke="#c6d3dc" stroke-width="3"/>
+    <circle cx="556" cy="110" r="15" fill="#ff6b4a"/>
+    <circle cx="556" cy="110" r="7" fill="#ffffff"/>
+    <circle cx="556" cy="110" r="3" fill="#ff6b4a"/>
+  </g>
+
+  <!-- Disques empilés au sol -->
+  <g stroke-width="3">
+    <ellipse cx="150" cy="398" rx="80" ry="20" fill="#1b7fb0" stroke="#12496a"/>
+    <ellipse cx="150" cy="396" rx="80" ry="18" fill="#2ba8e0"/>
+    <ellipse cx="150" cy="382" rx="72" ry="18" fill="#b98400" stroke="#7a5800"/>
+    <ellipse cx="150" cy="380" rx="72" ry="16" fill="#e0a000"/>
+    <ellipse cx="150" cy="366" rx="64" ry="16" fill="#c93d1d" stroke="#8a2a12"/>
+    <ellipse cx="150" cy="364" rx="64" ry="14" fill="#ff6b4a"/>
+    <ellipse cx="150" cy="364" rx="18" ry="5" fill="#14232e" stroke="none"/>
+  </g>
+
+  <!-- Kettlebell -->
+  <g>
+    <path d="M630 330 C 622 272 698 272 690 330" fill="none" stroke="#33506b" stroke-width="20" stroke-linecap="round"/>
+    <circle cx="660" cy="356" r="50" fill="url(#fonte)"/>
+    <path d="M625 330 A 50 50 0 0 1 660 307" fill="none" stroke="#7fb8dc" stroke-width="4" stroke-linecap="round" opacity="0.6"/>
+  </g>
+  <!-- craie -->
+  <g fill="#e8f2f8" opacity="0.5">
+    <circle cx="600" cy="330" r="4"/>
+    <circle cx="716" cy="318" r="3"/>
+    <circle cx="700" cy="368" r="3"/>
+    <circle cx="252" cy="352" r="3"/>
+  </g>
+
+  <!-- Grain -->
+  <rect width="800" height="450" filter="url(#grain)"/>
+</svg>

@@ -21,7 +21,9 @@ const ARTICLES = [
       "motivation",
       "planification"
     ],
-    "emoji": "🎯"
+    "emoji": "🎯",
+    "image": "assets/covers/se-fixer-des-objectifs-qui-font-vraiment-avancer.svg",
+    "imageAlt": "Tableau blanc de box avec une progression en barres ascendantes vers une cible, disques et kettlebell au sol"
   },
   {
     "id": "bains-froids",
@@ -38,6 +40,6 @@ const ARTICLES = [
     ],
     "emoji": "🧊",
     "image": "assets/covers/bains-froids.svg",
-    "imageAlt": "Un petit monstre vert détendu dans un bain glacé, les mains posées sur le rebord entre les glaçons"
+    "imageAlt": "Un baril de bain froid fumant au milieu d'une salle de CrossFit, barre chargée posée au sol et anneaux suspendus au rig"
   }
 ];
