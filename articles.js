@@ -22,8 +22,8 @@ const ARTICLES = [
       "planification"
     ],
     "emoji": "🎯",
-    "image": "assets/covers/se-fixer-des-objectifs-qui-font-vraiment-avancer.svg",
-    "imageAlt": "Tableau blanc de box avec une progression en barres ascendantes vers une cible, disques et kettlebell au sol"
+    "image": "assets/covers/se-fixer-des-objectifs-qui-font-vraiment-avancer.jpg",
+    "imageAlt": "Main chalkée d'un athlète en pleine prise sur une barre olympique, dans une salle de CrossFit"
   },
   {
     "id": "bains-froids",
@@ -39,7 +39,7 @@ const ARTICLES = [
       "hypertrophie"
     ],
     "emoji": "🧊",
-    "image": "assets/covers/bains-froids.svg",
-    "imageAlt": "Un baril de bain froid fumant au milieu d'une salle de CrossFit, barre chargée posée au sol et anneaux suspendus au rig"
+    "image": "assets/covers/bains-froids.jpg",
+    "imageAlt": "Un homme immergé jusqu'aux épaules dans une eau glacée, en pleine respiration"
   }
 ];
