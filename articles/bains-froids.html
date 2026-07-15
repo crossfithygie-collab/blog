@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Le bain froid et le Hulk — Carnet de bord</title>
+  <meta name="description" content="Ce que dit la science récente de l'immersion froide, relu pour un cycle force.">
+
+  <!-- Google Fonts : seule dépendance externe -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=JetBrains+Mono:wght@400;500;700&family=Newsreader:ital,opsz,wght@0,6..72,400..700;1,6..72,400..700&display=swap" rel="stylesheet">
+
+  <!-- Chemins relatifs depuis /articles/ -->
+  <link rel="stylesheet" href="../assets/style.css">
+  <link rel="stylesheet" href="../assets/article.css">
+</head>
+<body>
+
+  <!-- 1. Barre de progression de lecture (remplie par le JS en bas de page) -->
+  <div class="progress-track" aria-hidden="true">
+    <div class="progress-bar" id="progress"></div>
+  </div>
+
+  <div class="article-wrap">
+
+    <!-- 2. Retour accueil -->
+    <nav aria-label="Fil d'Ariane">
+      <a href="../index.html" class="back-link">← Retour à l’accueil</a>
+    </nav>
+
+    <article>
+
+      <!-- 3. Masthead -->
+      <header class="masthead">
+        <p class="kicker">Dossier récupération</p>
+        <h1 class="article-title">Le bain froid et le Hulk</h1>
+        <p class="standfirst">L’immersion froide calme tout — y compris, parfois, les adaptations que ton cycle de force cherche à provoquer. Où placer le curseur.</p>
+        <div class="byline">
+          <time datetime="2026-07-15">15 juillet 2026</time>
+          <span>6 min de lecture</span>
+          <span>Base : méta-analyses 2015–2025</span>
+        </div>
+      </header>
+
+      <!-- 5. Lettrine sur le premier paragraphe -->
+      <p class="dropcap">Bruce Banner devient Hulk sous stress. Toi, tu deviens plus fort sous stress mécanique — à condition de laisser l’inflammation post-séance faire son travail de signal. Le bain froid est devenu le rituel réflexe de la récupération, mais la littérature récente raconte une histoire plus nuancée : formidable outil de fraîcheur perçue et de récupération aiguë, il peut aussi <mark class="attention">éteindre une partie du signal anabolique</mark> quand il est mal placé dans la semaine. Voyons comment doser.</p>
+
+      <!-- 4. Sections numérotées : sur-titre mono + H2 display -->
+      <section>
+        <p class="section-label">01 — Le dosage</p>
+        <h2 class="section-title">Froid, oui. Congélation, non.</h2>
+
+        <p>La majorité des protocoles étudiés convergent vers une fenêtre étroite : une eau entre <mark>10 et 15&nbsp;°C</mark>, pour une durée totale de <mark>10 à 15 minutes</mark>, en continu ou fractionnée. En dessous de 8&nbsp;°C, l’inconfort explose sans bénéfice mesuré supplémentaire ; au-dessus de 16&nbsp;°C, l’effet vasoconstricteur devient anecdotique.</p>
+
+        <div class="keydata">
+          <span class="mono-label">Fenêtre cible</span>
+          <p class="chiffre">10–15&nbsp;°C</p>
+          <p class="legende">La plage de température la plus représentée dans les protocoles ayant montré un effet sur les douleurs musculaires à 24–48&nbsp;h.</p>
+        </div>
+
+        <p>Plus longtemps n’est pas mieux : la relation dose-réponse plafonne vite, et les immersions prolongées augmentent surtout le risque de frissons incontrôlés et de vasoconstriction périphérique excessive. Le bon réflexe : sortir <mark class="positif">avant</mark> de claquer des dents.</p>
+      </section>
+
+      <hr class="section-sep">
+
+      <section>
+        <p class="section-label">02 — Le piège hypertrophie</p>
+        <h2 class="section-title">Quand le froid éteint le Hulk</h2>
+
+        <p>C’est le point le plus contre-intuitif. Plusieurs essais contrôlés sur des cycles de renforcement de 8 à 12 semaines observent que l’immersion froide systématique après chaque séance <mark class="attention">réduit les gains de masse et de force</mark> par rapport à une récupération active, avec des baisses rapportées de l’ordre de <mark class="attention">-10 à -20&nbsp;%</mark> sur certains marqueurs d’hypertrophie.</p>
+
+        <div class="keydata attention">
+          <span class="mono-label">Signal anabolique</span>
+          <p class="chiffre">-20&nbsp;%</p>
+          <p class="legende">Ordre de grandeur de la réduction de l’activation des voies de synthèse protéique (type mTOR/cellules satellites) observée quand le froid suit immédiatement une séance de force.</p>
+        </div>
+
+        <p>Le mécanisme supposé : l’inflammation aiguë post-entraînement n’est pas un déchet à évacuer, c’est <em>le message</em> qui déclenche la reconstruction. La refroidir immédiatement, c’est baisser le volume de ce message.</p>
+
+        <!-- Pull-quote -->
+        <blockquote class="pull-quote">
+          <p>« L’inflammation post-séance n’est pas l’ennemi. C’est le bon de commande de tes futurs muscles. »</p>
+          <footer>À retenir de la section 02</footer>
+        </blockquote>
+      </section>
+
+      <hr class="section-sep">
+
+      <section>
+        <p class="section-label">03 — Le bon timing</p>
+        <h2 class="section-title">Éloigner le froid de la fonte</h2>
+
+        <p>La solution n’est pas d’abandonner le bain froid, mais de le <mark class="positif">déplacer</mark>. La fenêtre sensible semble concerner les heures qui suivent directement le travail de force : passé ce délai, l’essentiel de la cascade de signalisation est lancé.</p>
+
+        <div class="keydata positif">
+          <span class="mono-label">Délai de sécurité</span>
+          <p class="chiffre">4–6&nbsp;h</p>
+          <p class="legende">Délai minimal conseillé entre la fin d’une séance de force et l’immersion froide, pour préserver la réponse de synthèse protéique.</p>
+        </div>
+
+        <p>Encore plus simple : réserver le froid aux <mark>jours sans force</mark> — jours de repos, lendemains de gros volume, veilles de compétition — et aux périodes où la priorité est la fraîcheur, pas l’adaptation.</p>
+
+        <!-- Encart tip -->
+        <aside class="tip">
+          <span class="mono-label">Note pratique</span>
+          <p>En bloc de force, garde le bain froid pour le week-end ou les deloads. En période de compétition ou de très gros volume (plusieurs séances par jour), inverse la logique : le froid redevient prioritaire, car récupérer vite compte plus que maximiser chaque adaptation.</p>
+        </aside>
+
+        <!-- Comparatif deux colonnes -->
+        <div class="comparatif">
+          <div class="colonne faire">
+            <h3>À faire</h3>
+            <ul>
+              <li>Jours de repos ou après cardio léger</li>
+              <li>Attendre 4–6&nbsp;h après la force</li>
+              <li>10–15 min à 10–15&nbsp;°C, immersion jusqu’aux épaules</li>
+              <li>Sortir avant les frissons incontrôlés</li>
+            </ul>
+          </div>
+          <div class="colonne eviter">
+            <h3>À éviter</h3>
+            <ul>
+              <li>Bain froid dans l’heure qui suit une séance de force</li>
+              <li>Systématiser le froid après chaque entraînement</li>
+              <li>Descendre sous 8&nbsp;°C « pour faire plus »</li>
+              <li>Dépasser 20 min en continu</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <hr class="section-sep">
+
+      <section>
+        <p class="section-label">04 — Tête &amp; récupération</p>
+        <h2 class="section-title">L’effet différé sur le stress</h2>
+
+        <p>Là où le froid brille sans réserve, c’est sur le versant nerveux. Au-delà du choc initial (pic de noradrénaline, hyperventilation), les pratiquants réguliers rapportent un effet différé net sur l’humeur et la perception de stress dans les heures qui suivent, avec des études pilotes montrant une <mark class="positif">amélioration du bien-être perçu jusqu’à 12&nbsp;h</mark> après une immersion courte.</p>
+
+        <div class="keydata retenir">
+          <span class="mono-label">Effet différé</span>
+          <p class="chiffre">+12&nbsp;h</p>
+          <p class="legende">Durée pendant laquelle l’effet « tête froide » — humeur stabilisée, stress perçu en baisse — persiste après une immersion de quelques minutes.</p>
+        </div>
+
+        <p>Pour un coach ou un gérant de salle qui enchaîne les journées longues, c’est peut-être l’usage le plus rentable du bain froid : un outil de <mark>régulation du système nerveux</mark>, plus qu’un outil musculaire.</p>
+      </section>
+
+      <hr class="section-sep">
+
+      <section>
+        <p class="section-label">05 — Protocole récap</p>
+        <h2 class="section-title">Ton protocole en un tableau</h2>
+
+        <!-- Tableau récapitulatif encadré -->
+        <div class="recap">
+          <table>
+            <caption>Ton protocole</caption>
+            <tbody>
+              <tr>
+                <th scope="row">Température</th>
+                <td>10–15&nbsp;°C</td>
+              </tr>
+              <tr>
+                <th scope="row">Durée</th>
+                <td>10–15 min au total (en continu ou 2–3 fractions)</td>
+              </tr>
+              <tr>
+                <th scope="row">Fréquence en bloc force</th>
+                <td>1–2×/semaine, jamais juste après la force</td>
+              </tr>
+              <tr>
+                <th scope="row">Délai après la force</th>
+                <td>4–6&nbsp;h minimum, idéalement jour off</td>
+              </tr>
+              <tr>
+                <th scope="row">En compétition</th>
+                <td>Libre : la fraîcheur prime sur l’adaptation</td>
+              </tr>
+              <tr>
+                <th scope="row">Signal d’arrêt</th>
+                <td>Frissons incontrôlés, extrémités engourdies</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <p>Le bain froid n’est ni un miracle ni un sabotage : c’est un levier de <mark>gestion du stress global</mark>, à placer intelligemment autour du travail qui compte. Laisse le Hulk finir sa transformation avant de lui jeter un seau d’eau glacée.</p>
+      </section>
+
+      <!-- 8. Footer d'article : sources + disclaimer -->
+      <footer class="article-footer">
+        <span class="mono-label">Sources</span>
+        <ul class="sources">
+          <li><a href="https://pubmed.ncbi.nlm.nih.gov/26174323/" target="_blank" rel="noopener">Roberts et al. (2015) — Post-exercise cold water immersion attenuates acute anabolic signalling, <em>J Physiol</em></a></li>
+          <li><a href="https://pubmed.ncbi.nlm.nih.gov/31696455/" target="_blank" rel="noopener">Malta et al. (2021) — Regular cold-water immersion and resistance training adaptations, <em>Sports Med</em></a></li>
+          <li><a href="https://pubmed.ncbi.nlm.nih.gov/22336838/" target="_blank" rel="noopener">Bleakley &amp; Davison (2012) — Cryotherapy and recovery: what is the evidence?, <em>Br J Sports Med</em></a></li>
+        </ul>
+        <p class="disclaimer">Contenu informatif rédigé par un passionné, pas un avis médical. En cas de pathologie cardiovasculaire, de trouble de la sensibilité ou de doute, demande l’avis d’un professionnel de santé avant toute immersion froide.</p>
+      </footer>
+
+    </article>
+  </div>
+
+  <script>
+    (function () {
+      "use strict";
+
+      /* ------------------------------------------------------
+         Barre de progression de lecture.
+         - scroll en écouteur `passive` (pas de blocage du défilement)
+         - hauteur défilable recalculée au resize (rotation d'écran,
+           chargement des fontes…)
+         - transform: scaleX() plutôt que width → pas de reflow
+         ------------------------------------------------------ */
+      var bar = document.getElementById("progress");
+      var maxScroll = 1;
+
+      function recalculer() {
+        maxScroll = Math.max(
+          document.documentElement.scrollHeight - window.innerHeight,
+          1 // évite une division par zéro sur les pages courtes
+        );
+        peindre();
+      }
+
+      function peindre() {
+        var ratio = Math.min(window.scrollY / maxScroll, 1);
+        bar.style.transform = "scaleX(" + ratio + ")";
+      }
+
+      window.addEventListener("scroll", peindre, { passive: true });
+      window.addEventListener("resize", recalculer);
+      window.addEventListener("load", recalculer); // après fontes/images
+      recalculer();
+    })();
+  </script>
+</body>
+</html>

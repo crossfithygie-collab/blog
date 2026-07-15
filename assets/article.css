@@ -1,0 +1,403 @@
+/* ============================================================
+   article.css — Gabarit d'article (à charger APRÈS style.css)
+   Tous les composants du gabarit sont stylés ici :
+   progression, masthead, sections, lettrine, <mark>, keydata,
+   pull-quote, tip, comparatif, tableau récap, footer sources.
+   ============================================================ */
+
+/* ------------------------------------------------------------
+   1. Barre de progression de lecture
+   Fixée en haut ; remplie via transform: scaleX() par le JS
+   (transform = pas de reflow, animation fluide).
+   ------------------------------------------------------------ */
+.progress-track {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: transparent;
+  z-index: 100;
+  pointer-events: none;
+}
+
+.progress-bar {
+  height: 100%;
+  background: linear-gradient(90deg, var(--accent-dark), var(--accent));
+  transform-origin: left center;
+  transform: scaleX(0);
+  transition: transform 0.08s linear;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .progress-bar {
+    transition: none;
+  }
+}
+
+/* ------------------------------------------------------------
+   Structure générale
+   ------------------------------------------------------------ */
+.article-wrap {
+  max-width: 680px;
+  margin: 0 auto;
+  padding: var(--s-6) var(--s-5) var(--s-7);
+}
+
+.back-link {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px; /* cible tactile */
+  gap: var(--s-2);
+  font-family: var(--font-mono);
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  text-decoration: none;
+  color: var(--text-2);
+}
+
+.back-link:hover {
+  color: var(--accent-dark);
+}
+
+/* ------------------------------------------------------------
+   2. Masthead : kicker + titre + chapô + byline
+   ------------------------------------------------------------ */
+.masthead {
+  margin: var(--s-5) 0 var(--s-6);
+  padding-bottom: var(--s-5);
+  border-bottom: 1px solid var(--border);
+}
+
+.masthead .kicker {
+  color: var(--accent-dark);
+}
+
+.article-title {
+  font-size: clamp(32px, 8.5vw, 52px);
+  margin-top: var(--s-3);
+}
+
+.standfirst {
+  font-size: clamp(19px, 5vw, 23px);
+  line-height: 1.5;
+  color: var(--text-2);
+  font-style: italic;
+  margin: var(--s-4) 0 var(--s-5);
+}
+
+.byline {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-2) var(--s-4);
+  color: var(--text-3);
+}
+
+/* ------------------------------------------------------------
+   3. Sections numérotées : sur-titre mono + H2 display
+   ------------------------------------------------------------ */
+.section-label {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--accent-dark);
+  margin: var(--s-7) 0 var(--s-2);
+}
+
+.section-title {
+  font-size: clamp(23px, 6vw, 30px);
+  margin-bottom: var(--s-4);
+}
+
+/* Séparateur de section discret */
+.section-sep {
+  border: 0;
+  height: 1px;
+  background: var(--border);
+  margin: var(--s-7) auto 0;
+  width: 64px;
+}
+
+/* ------------------------------------------------------------
+   4. Lettrine sur le premier paragraphe
+   ------------------------------------------------------------ */
+.dropcap::first-letter {
+  font-family: var(--font-display);
+  font-size: 3.4em;
+  line-height: 0.85;
+  float: left;
+  padding: 0.06em 0.12em 0 0;
+  color: var(--accent-dark);
+}
+
+/* ------------------------------------------------------------
+   5. Surlignage <mark> — effet feutre (dégradé bas de ligne)
+   3 tons : neutre (bleu), attention (rouge), positif (vert).
+   ------------------------------------------------------------ */
+mark {
+  color: inherit;
+  padding: 0 0.15em;
+  border-radius: 2px;
+  background: linear-gradient(to top, rgba(43, 168, 224, 0.38) 42%, transparent 42%);
+}
+
+mark.attention {
+  background: linear-gradient(to top, rgba(255, 107, 74, 0.38) 42%, transparent 42%);
+}
+
+mark.positif {
+  background: linear-gradient(to top, rgba(47, 184, 114, 0.38) 42%, transparent 42%);
+}
+
+/* ------------------------------------------------------------
+   6. Encarts « keydata » — un chiffre fort isolé
+   ------------------------------------------------------------ */
+.keydata {
+  margin: var(--s-6) 0;
+  padding: var(--s-4) var(--s-5);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-left: 5px solid var(--accent);
+  border-radius: var(--radius-m);
+  box-shadow: var(--shadow-1);
+}
+
+.keydata.attention { border-left-color: var(--danger); }
+.keydata.positif   { border-left-color: var(--positif); }
+.keydata.retenir   { border-left-color: var(--retenir); }
+
+.keydata .mono-label {
+  color: var(--text-3);
+}
+
+.keydata .chiffre {
+  font-family: var(--font-display);
+  font-size: clamp(38px, 10vw, 56px);
+  line-height: 1.05;
+  margin: var(--s-2) 0 var(--s-1);
+  overflow-wrap: break-word;
+}
+
+.keydata .legende {
+  color: var(--text-2);
+  font-size: 16px;
+  line-height: 1.5;
+}
+
+/* ------------------------------------------------------------
+   7a. Pull-quote
+   ------------------------------------------------------------ */
+.pull-quote {
+  margin: var(--s-6) 0;
+  padding: var(--s-2) 0 var(--s-2) var(--s-5);
+  border-left: 4px solid var(--accent);
+  font-size: clamp(21px, 5.5vw, 26px);
+  line-height: 1.45;
+  font-style: italic;
+  color: var(--text);
+}
+
+.pull-quote footer {
+  margin-top: var(--s-2);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-style: normal;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-3);
+}
+
+/* ------------------------------------------------------------
+   7b. Encart « tip » — note pratique
+   ------------------------------------------------------------ */
+.tip {
+  margin: var(--s-6) 0;
+  padding: var(--s-4) var(--s-5);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-top: 4px solid var(--retenir);
+  border-radius: var(--radius-m);
+  box-shadow: var(--shadow-1);
+}
+
+.tip .mono-label {
+  color: var(--retenir);
+  display: block;
+  margin-bottom: var(--s-2);
+}
+
+.tip p {
+  margin: 0;
+  font-size: 17px;
+  color: var(--text-2);
+}
+
+/* ------------------------------------------------------------
+   7c. Comparatif deux colonnes : à faire / à éviter
+   ------------------------------------------------------------ */
+.comparatif {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--s-4);
+  margin: var(--s-6) 0;
+}
+
+@media (max-width: 560px) {
+  .comparatif {
+    grid-template-columns: 1fr; /* colonne unique sur mobile */
+  }
+}
+
+.comparatif .colonne {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-m);
+  padding: var(--s-4) var(--s-5);
+  box-shadow: var(--shadow-1);
+}
+
+.comparatif .colonne.faire   { border-top: 4px solid var(--positif); }
+.comparatif .colonne.eviter  { border-top: 4px solid var(--danger); }
+
+.comparatif h3 {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  margin-bottom: var(--s-3);
+}
+
+.comparatif .faire h3  { color: var(--positif); }
+.comparatif .eviter h3 { color: var(--danger); }
+
+.comparatif ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  font-size: 16.5px;
+  color: var(--text-2);
+}
+
+.comparatif li {
+  position: relative;
+  padding-left: 26px;
+  margin-bottom: var(--s-2);
+}
+
+.comparatif li::before {
+  position: absolute;
+  left: 0;
+  font-family: var(--font-mono);
+  font-weight: 700;
+}
+
+.comparatif .faire li::before {
+  content: "✓";
+  color: var(--positif);
+}
+
+.comparatif .eviter li::before {
+  content: "✗";
+  color: var(--danger);
+}
+
+/* ------------------------------------------------------------
+   7d. Tableau récapitulatif encadré (clé → valeur)
+   ------------------------------------------------------------ */
+.recap {
+  margin: var(--s-6) 0;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-m);
+  box-shadow: var(--shadow-1);
+  overflow: hidden;
+}
+
+.recap table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.recap caption {
+  text-align: left;
+  padding: var(--s-4) var(--s-5) 0;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--accent-dark);
+}
+
+.recap th,
+.recap td {
+  padding: var(--s-3) var(--s-5);
+  text-align: left;
+  border-bottom: 1px solid var(--border);
+  vertical-align: top;
+}
+
+.recap tr:last-child th,
+.recap tr:last-child td {
+  border-bottom: 0;
+}
+
+.recap th[scope="row"] {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-3);
+  white-space: nowrap;
+  width: 38%;
+}
+
+.recap td {
+  font-size: 17px;
+  color: var(--text);
+}
+
+@media (max-width: 480px) {
+  .recap th[scope="row"] {
+    white-space: normal;
+  }
+}
+
+/* ------------------------------------------------------------
+   8. Footer d'article : sources + disclaimer
+   ------------------------------------------------------------ */
+.article-footer {
+  margin-top: var(--s-7);
+  padding-top: var(--s-5);
+  border-top: 1px solid var(--border);
+}
+
+.article-footer .mono-label {
+  color: var(--text-3);
+  display: block;
+  margin-bottom: var(--s-3);
+}
+
+.sources {
+  margin: 0 0 var(--s-5);
+  padding-left: 20px;
+  font-size: 16px;
+  color: var(--text-2);
+}
+
+.sources li {
+  margin-bottom: var(--s-2);
+}
+
+.disclaimer {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-m);
+  padding: var(--s-4) var(--s-5);
+  font-size: 14.5px;
+  font-style: italic;
+  color: var(--text-3);
+}

@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Carnet de bord — entraînement, récup &amp; salle</title>
+  <meta name="description" content="Blog personnel : récupération, entraînement, nutrition et gestion d'une salle de sport.">
+
+  <!-- Google Fonts : seule dépendance externe -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=JetBrains+Mono:wght@400;500;700&family=Newsreader:ital,opsz,wght@0,6..72,400..700;1,6..72,400..700&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+
+  <header class="site-header">
+    <p class="kicker">Carnet de bord</p>
+    <h1 class="site-title">Notes de terrain</h1>
+    <p class="site-subtitle">Récupération, entraînement, nutrition et vie de salle — ce que je teste, ce que je lis, ce que je garde.</p>
+  </header>
+
+  <div class="toolbar">
+    <label for="search" class="mono-label" style="display:block; margin-bottom: var(--s-2); color: var(--text-3);">Recherche</label>
+    <input type="search" id="search" class="search-field" placeholder="Titre, résumé ou tag…" autocomplete="off">
+
+    <nav aria-label="Filtres par rubrique">
+      <ul class="filters" id="filters"></ul>
+    </nav>
+  </div>
+
+  <main>
+    <section class="articles-list" id="list" aria-live="polite" aria-label="Liste des articles"></section>
+  </main>
+
+  <footer class="site-footer">
+    <p>Blog personnel — publié via GitHub Pages.</p>
+  </footer>
+
+  <script src="articles.js"></script>
+  <script>
+    (function () {
+      "use strict";
+
+      /* ------------------------------------------------------
+         Couleur stable par rubrique.
+         Un hash simple du nom pointe vers une petite palette :
+         une rubrique garde donc toujours la même couleur, même
+         quand de nouvelles rubriques apparaissent.
+         ------------------------------------------------------ */
+      var PALETTE = ["#2ba8e0", "#2fb872", "#e0a000", "#ff6b4a", "#8a63d2", "#d4508f"];
+
+      function couleurRubrique(nom) {
+        var hash = 0;
+        for (var i = 0; i < nom.length; i++) {
+          hash = (hash * 31 + nom.charCodeAt(i)) >>> 0; // hash déterministe
+        }
+        return PALETTE[hash % PALETTE.length];
+      }
+
+      /* Normalisation pour la recherche : minuscules + sans accents */
+      function normaliser(s) {
+        return s.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+      }
+
+      /* Date ISO → « 15 juillet 2026 » (midi pour éviter tout
+         décalage de jour lié au fuseau horaire) */
+      var formatFR = new Intl.DateTimeFormat("fr-FR", { day: "numeric", month: "long", year: "numeric" });
+      function dateLisible(iso) {
+        return formatFR.format(new Date(iso + "T12:00:00"));
+      }
+
+      /* ------------------------------------------------------
+         État courant des deux filtres combinés
+         ------------------------------------------------------ */
+      var rubriqueActive = null; // null = « Tout »
+      var requete = "";
+
+      var listEl = document.getElementById("list");
+      var filtersEl = document.getElementById("filters");
+      var searchEl = document.getElementById("search");
+
+      /* Tri par date décroissante, une fois pour toutes */
+      var articles = ARTICLES.slice().sort(function (a, b) {
+        return b.date.localeCompare(a.date);
+      });
+
+      /* ------------------------------------------------------
+         Barre de filtres : générée dynamiquement à partir des
+         rubriques distinctes présentes dans ARTICLES, avec
+         compteur d'articles. Aucune rubrique codée en dur.
+         ------------------------------------------------------ */
+      function construireFiltres() {
+        var compteurs = {};
+        articles.forEach(function (a) {
+          compteurs[a.rubrique] = (compteurs[a.rubrique] || 0) + 1;
+        });
+        var rubriques = Object.keys(compteurs).sort(function (a, b) {
+          return a.localeCompare(b, "fr");
+        });
+
+        filtersEl.innerHTML = "";
+        // Bouton « Tout » en tête
+        filtersEl.appendChild(creerBouton("Tout", null, articles.length, null));
+        rubriques.forEach(function (r) {
+          filtersEl.appendChild(creerBouton(r, r, compteurs[r], couleurRubrique(r)));
+        });
+      }
+
+      function creerBouton(label, valeur, compte, couleur) {
+        var li = document.createElement("li");
+        var btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = "filter-btn";
+        btn.setAttribute("aria-pressed", String(rubriqueActive === valeur));
+
+        if (couleur) {
+          var dot = document.createElement("span");
+          dot.className = "dot";
+          dot.style.background = couleur;
+          dot.setAttribute("aria-hidden", "true");
+          btn.appendChild(dot);
+        }
+        btn.appendChild(document.createTextNode(label + " "));
+
+        var count = document.createElement("span");
+        count.className = "count";
+        count.textContent = "(" + compte + ")";
+        btn.appendChild(count);
+
+        btn.addEventListener("click", function () {
+          rubriqueActive = valeur;
+          // Met à jour l'état visuel de tous les boutons
+          filtersEl.querySelectorAll(".filter-btn").forEach(function (b) {
+            b.setAttribute("aria-pressed", "false");
+          });
+          btn.setAttribute("aria-pressed", "true");
+          afficher();
+        });
+
+        li.appendChild(btn);
+        return li;
+      }
+
+      /* ------------------------------------------------------
+         Rendu de la liste : filtre rubrique + recherche texte
+         (titre + résumé + tags, insensible casse et accents),
+         sans rechargement de page.
+         ------------------------------------------------------ */
+      function afficher() {
+        var visibles = articles.filter(function (a) {
+          if (rubriqueActive && a.rubrique !== rubriqueActive) return false;
+          if (requete) {
+            var meule = normaliser(a.titre + " " + a.resume + " " + a.tags.join(" "));
+            if (meule.indexOf(requete) === -1) return false;
+          }
+          return true;
+        });
+
+        listEl.innerHTML = "";
+
+        if (visibles.length === 0) {
+          var vide = document.createElement("p");
+          vide.className = "empty-state";
+          vide.textContent = requete
+            ? "Aucun article ne correspond à cette recherche."
+            : "Aucun article dans cette rubrique pour l’instant.";
+          listEl.appendChild(vide);
+          return;
+        }
+
+        visibles.forEach(function (a) {
+          listEl.appendChild(creerCarte(a));
+        });
+      }
+
+      function creerCarte(a) {
+        // Toute la carte est un lien vers l'article
+        var carte = document.createElement("a");
+        carte.className = "card";
+        carte.href = a.url;
+
+        var rub = document.createElement("span");
+        rub.className = "card-rubrique";
+        var dot = document.createElement("span");
+        dot.className = "dot";
+        dot.style.background = couleurRubrique(a.rubrique);
+        dot.setAttribute("aria-hidden", "true");
+        rub.appendChild(dot);
+        rub.appendChild(document.createTextNode(a.rubrique));
+        carte.appendChild(rub);
+
+        var titre = document.createElement("h2");
+        titre.className = "card-title";
+        titre.textContent = a.titre;
+        carte.appendChild(titre);
+
+        var resume = document.createElement("p");
+        resume.className = "card-resume";
+        resume.textContent = a.resume;
+        carte.appendChild(resume);
+
+        var meta = document.createElement("div");
+        meta.className = "card-meta";
+        var time = document.createElement("time");
+        time.dateTime = a.date;
+        time.textContent = dateLisible(a.date);
+        meta.appendChild(time);
+        var lecture = document.createElement("span");
+        lecture.textContent = a.tempsLecture + " min de lecture";
+        meta.appendChild(lecture);
+        carte.appendChild(meta);
+
+        return carte;
+      }
+
+      /* Recherche : filtrage au fil de la frappe */
+      searchEl.addEventListener("input", function () {
+        requete = normaliser(searchEl.value.trim());
+        afficher();
+      });
+
+      construireFiltres();
+      afficher();
+    })();
+  </script>
+</body>
+</html>
