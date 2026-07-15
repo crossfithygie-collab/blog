@@ -674,7 +674,15 @@ Un paragraphe avec un ==chiffre surligné==.
               content: base64utf8(genererArticle(d, c))
             }
           });
-          if (!repArticle.ok) throw new Error("Échec de création de l'article (HTTP " + repArticle.status + ")");
+          if (!repArticle.ok) {
+            if (repArticle.status === 403 || repArticle.status === 404) {
+              throw new Error("Écriture refusée (HTTP " + repArticle.status + ") : le jeton peut lire mais pas écrire. " +
+                "Sur GitHub → Settings → Developer settings → Fine-grained tokens, ouvre ton jeton et vérifie : " +
+                "1) Repository access = « Only select repositories » avec le dépôt blog sélectionné (PAS « Public repositories (read-only) ») ; " +
+                "2) Permissions → Contents = « Read and write ». Puis ré-enregistre le jeton ici (bloc 🔑).");
+            }
+            throw new Error("Échec de création de l'article (HTTP " + repArticle.status + ")");
+          }
           log("✓ Article créé.");
 
           /* 3. Mettre à jour articles.js (avec son sha pour éviter d'écraser) */
