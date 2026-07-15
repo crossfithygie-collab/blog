@@ -411,6 +411,19 @@ time {
   font-size: 12px;
 }
 
+/* Lien vers la page de rédaction : discret mais cible tactile correcte */
+.site-footer .lien-admin {
+  display: inline-block;
+  padding: var(--s-4) var(--s-2);
+  margin: calc(-1 * var(--s-4)) calc(-1 * var(--s-2));
+  color: var(--text-3);
+  text-decoration-color: var(--border);
+}
+
+.site-footer .lien-admin:hover {
+  color: var(--accent-dark);
+}
+
 /* ------------------------------------------------------------
    Mouvement réduit : on coupe transitions et animations
    ------------------------------------------------------------ */
