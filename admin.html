@@ -738,43 +738,62 @@ Un paragraphe avec un ==chiffre surligné==.
          le formulaire : relecture / retouches, puis Publier.
          ====================================================== */
       function promptGeneration(sujet, consignes, rubriques) {
-        return "Tu écris pour « Carnet de bord », le blog personnel d'un coach et gérant de salle de CrossFit. " +
-          "Ton : tutoiement, direct, concret, imagé mais rigoureux ; public : pratiquants et coachs.\n\n" +
-          "EXIGENCES DE FOND (non négociables) :\n" +
-          "- Chaque affirmation importante s'appuie sur du CONCRET : étude scientifique (auteurs, année, revue, " +
-          "et si pertinent taille d'échantillon et ampleur d'effet), méta-analyse, donnée statistique chiffrée, " +
-          "ou repère de terrain quantifié. Pas de généralités creuses type « des études montrent que ».\n" +
-          "- Rédaction DÉVELOPPÉE et détaillée : explique les mécanismes (physiologie, psychologie, logistique), " +
-          "les ordres de grandeur, les nuances et les limites des données (populations étudiées, protocoles, " +
-          "controverses éventuelles), puis l'application pratique précise (charges, fréquences, durées, seuils).\n" +
-          "- 1200 à 1800 mots. Chaque section fait plusieurs paragraphes denses (150 à 300 mots), " +
-          "pas des paragraphes d'une phrase.\n" +
-          "- Si tu n'es pas sûr d'un chiffre exact, donne une fourchette honnête plutôt qu'une fausse précision. " +
-          "Cite les études dans le texte (auteurs + année) même quand tu ne fournis pas de lien.\n\n" +
+        return "Tu es un rédacteur spécialisé en sciences du sport et de l'entraînement, qui écrit des articles de fond " +
+          "documentés pour « Carnet de bord », le blog d'un coach et gérant de salle de CrossFit. " +
+          "Tu écris comme un journaliste scientifique rigoureux doublé d'un praticien : chaque idée est étayée, " +
+          "expliquée en profondeur, puis traduite en application concrète. Ton : tutoiement, direct, sans jargon gratuit " +
+          "mais sans simplifier à outrance ; public : pratiquants sérieux et coachs, qui connaissent déjà les bases.\n\n" +
+
+          "═══ CE QUI REND UN ARTICLE RÉUSSI (lis attentivement) ═══\n" +
+          "L'écueil à éviter absolument : l'article SIMPLISTE — celui qui énonce des généralités vraies mais vagues, " +
+          "sans chiffres, sans mécanisme, sans nuance, qu'on pourrait écrire sans rien connaître au sujet. INTERDIT.\n\n" +
+
+          "Chaque SECTION doit dérouler, en plusieurs paragraphes denses, cette profondeur :\n" +
+          "1. LA DONNÉE : au moins une étude ou statistique PRÉCISE — nom des auteurs (ou de l'équipe/institution), " +
+          "année, type d'étude (ECR, méta-analyse, revue), taille d'échantillon, population étudiée, et surtout " +
+          "l'AMPLEUR chiffrée du résultat (pourcentage, effet en kg/watts/secondes, taille d'effet, intervalle). " +
+          "Confronte les études entre elles quand elles divergent.\n" +
+          "2. LE MÉCANISME : explique POURQUOI, en détail — la physiologie, la biomécanique, la psychologie ou la " +
+          "logistique sous-jacente. Le lecteur doit comprendre la chaîne causale, pas juste le résultat.\n" +
+          "3. LA NUANCE : les limites des données (population testée transposable ou pas ? protocole réaliste ? " +
+          "controverses, résultats contradictoires, effets qui dépendent du contexte / du niveau / du sexe / de l'âge).\n" +
+          "4. L'APPLICATION : quoi faire concrètement, avec des nombres exacts — charges (% du 1RM), séries, répétitions, " +
+          "fréquences hebdo, durées, temps de repos, seuils, échéances. Pas de conseil qu'on ne pourrait pas exécuter demain.\n\n" +
+
+          "LONGUEUR : 1800 à 2600 mots. C'est un article de fond, pas un résumé. " +
+          "Paragraphes de 4 à 8 phrases (jamais une seule phrase isolée en guise de paragraphe). " +
+          "Densité maximale : si une phrase n'apporte ni donnée, ni mécanisme, ni nuance, ni application concrète, supprime-la.\n\n" +
+
+          "HONNÊTETÉ : privilégie une fourchette honnête à une fausse précision. N'invente JAMAIS de chiffre, d'étude " +
+          "ni d'URL. Si tu ne connais pas la référence exacte, cite l'étude dans le texte (auteurs + année + revue) " +
+          "sans lien plutôt que de fabriquer une source.\n\n" +
+
           "SUJET DE L'ARTICLE : " + sujet + "\n" +
           (consignes ? "CONSIGNES SUPPLÉMENTAIRES : " + consignes + "\n" : "") +
           "RUBRIQUES EXISTANTES (réutilise-en une si elle colle, chaîne identique) : " +
           (rubriques.length ? rubriques.join(" · ") : "aucune") + "\n\n" +
-          "Le champ `contenu` utilise cette syntaxe (une directive par ligne, blocs séparés par des lignes vides) :\n" +
-          "- `## Label | Titre` : section (numérotée automatiquement)\n" +
-          "- `==texte==` surligné bleu, `==!texte==` rouge (piège/danger), `==+texte==` vert (bénéfice)\n" +
+
+          "═══ SYNTAXE DU CONTENU (une directive par ligne, blocs séparés par une ligne vide) ═══\n" +
+          "- `## Label | Titre` : nouvelle section (numérotée automatiquement)\n" +
+          "- `==texte==` surligné bleu, `==!texte==` rouge (piège/danger), `==+texte==` vert (bénéfice) — sur les chiffres et faits marquants\n" +
           "- `*italique*`, `[texte](https://url)`\n" +
-          "- `> citation` : pull-quote (une idée forte reformulée)\n" +
+          "- `> citation` : pull-quote (une idée forte reformulée en une phrase percutante)\n" +
           "- `!tip Conseil actionnable`\n" +
           "- `!chiffre VALEUR | LABEL COURT | Légende explicative` (tons : `!chiffre!` rouge, `!chiffre+` vert, `!chiffre~` jaune)\n" +
           "- `!faire item ; item` puis `!eviter item ; item`\n" +
           "- `!recap Titre | Clé => Valeur ; Clé => Valeur`\n" +
-          "- `!source Label | https://url`\n\n" +
-          "Structure attendue : 5 à 7 sections, un paragraphe d'intro AVANT la première section, " +
-          "3 à 5 `!chiffre` de tons variés (chacun adossé à une donnée sourcée du texte), 1 ou 2 `!tip`, " +
-          "1 comparatif faire/éviter, 1 `!recap` en dernière section, 1 ou 2 pull-quotes, " +
-          "des surlignages `==…==` sur les chiffres et faits marquants dans les phrases. " +
-          "Sources en pied d'article (`!source`) : 2 à 5 références réelles dont tu es certain qu'elles existent " +
-          "(PubMed, DOI…) ; en cas de doute sur l'URL exacte, cite l'étude dans le texte (auteurs + année + revue) " +
-          "sans lien plutôt que d'inventer une URL.\n\n" +
-          "Réponds UNIQUEMENT avec un objet JSON (aucun texte autour, pas de bloc de code) :\n" +
-          '{"titre": "…", "rubrique": "…", "emoji": "un seul emoji", "resume": "1-2 phrases pour la carte", ' +
-          '"chapo": "1-2 phrases d\'accroche", "kicker": "sur-titre court", "tags": ["3 à 5 tags"], "contenu": "…"}';
+          "- `!source Label complet (auteurs, année, revue) | https://url`\n\n" +
+
+          "STRUCTURE : un paragraphe d'accroche AVANT la première section (qui pose l'enjeu avec un premier chiffre fort), " +
+          "puis 6 à 8 sections. Répartis dans l'article : 4 à 6 `!chiffre` de tons variés (chacun adossé à une donnée " +
+          "développée dans le texte), 2 `!tip`, 1 comparatif `!faire`/`!eviter` fourni, 1 `!recap` en dernière section, " +
+          "1 à 2 pull-quotes. Sources en pied (`!source`) : 3 à 6 références réelles vérifiables.\n\n" +
+
+          "═══ FORMAT DE RÉPONSE (respecte-le EXACTEMENT, rien d'autre) ═══\n" +
+          "Ligne 1 : un objet JSON de métadonnées sur UNE seule ligne —\n" +
+          '{"titre":"…","rubrique":"…","emoji":"un seul emoji","resume":"1-2 phrases pour la carte","chapo":"1-2 phrases d\'accroche","kicker":"sur-titre court","tags":["3 à 5 tags"]}\n' +
+          "Ligne 2 : le séparateur exact ===CONTENU===\n" +
+          "Ensuite : le corps de l'article en syntaxe simplifiée (texte brut, vrais sauts de ligne).";
       }
 
       async function genererViaClaude() {
@@ -789,7 +808,7 @@ Un paragraphe avec un ==chiffre surligné==.
 
         var btn = $("btnGenerer");
         btn.disabled = true;
-        log("✨ Génération en cours (article détaillé : 1 à 2 min)…");
+        log("✨ Génération d'un article de fond par Claude Opus (2 à 4 min, sois patient)…");
 
         try {
           var rep = await fetch("https://api.anthropic.com/v1/messages", {
@@ -801,8 +820,8 @@ Un paragraphe avec un ==chiffre surligné==.
               "content-type": "application/json"
             },
             body: JSON.stringify({
-              model: "claude-sonnet-5",
-              max_tokens: 9000,
+              model: "claude-opus-4-8",
+              max_tokens: 16000,
               messages: [{ role: "user", content: promptGeneration(sujet, $("consignes").value.trim(), Object.keys(rubs)) }]
             })
           });
@@ -813,10 +832,17 @@ Un paragraphe avec un ==chiffre surligné==.
           }
           var donnees = await rep.json();
           var texte = donnees.content.map(function (b) { return b.text || ""; }).join("");
-          /* Extrait l'objet JSON même si le modèle a ajouté du texte autour */
-          var debut = texte.indexOf("{"), fin = texte.lastIndexOf("}");
-          if (debut === -1 || fin === -1) throw new Error("Réponse inexploitable (pas de JSON).");
-          var art = JSON.parse(texte.slice(debut, fin + 1));
+
+          /* Format attendu : {métadonnées JSON}\n===CONTENU===\ncorps brut.
+             On sépare sur le délimiteur — bien plus robuste que du JSON
+             contenant un très long texte à sauts de ligne. */
+          var sep = texte.indexOf("===CONTENU===");
+          if (sep === -1) throw new Error("Réponse inexploitable (séparateur ===CONTENU=== absent).");
+          var brutMeta = texte.slice(0, sep);
+          var contenu = texte.slice(sep + "===CONTENU===".length).replace(/^\s+/, "");
+          var dm = brutMeta.indexOf("{"), fm = brutMeta.lastIndexOf("}");
+          if (dm === -1 || fm === -1) throw new Error("Réponse inexploitable (métadonnées JSON absentes).");
+          var art = JSON.parse(brutMeta.slice(dm, fm + 1));
 
           $("titre").value = art.titre || sujet;
           $("rubrique").value = art.rubrique || "";
@@ -825,7 +851,7 @@ Un paragraphe avec un ==chiffre surligné==.
           $("chapo").value = art.chapo || "";
           $("kicker").value = art.kicker || "";
           $("tags").value = (art.tags || []).join(", ");
-          $("contenu").value = art.contenu || "";
+          $("contenu").value = contenu;
 
           /* Sauvegarde en brouillon + aperçu immédiat */
           var b = {};
