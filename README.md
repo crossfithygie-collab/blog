@@ -25,9 +25,19 @@ Safari sur iPhone).
 
 ### Option A — depuis le site (recommandé sur téléphone)
 
-Ouvrir **`/admin.html`** sur le site publié. La page permet d'écrire un article
-avec une syntaxe simplifiée (aide intégrée), de le prévisualiser avec le vrai
-design, puis de le publier : elle committe l'article + `articles.js`
+Ouvrir **`/admin.html`** sur le site publié. Deux façons de produire l'article :
+
+- **✨ Génération** : donner un sujet (+ consignes éventuelles) et « Générer
+  l'article » — la page appelle l'API Claude (Anthropic) depuis le navigateur,
+  remplit le formulaire et affiche l'aperçu. On relit, on retouche ce qu'on
+  veut, puis on publie. Nécessite une clé API créée sur
+  [console.anthropic.com](https://console.anthropic.com/settings/keys),
+  à coller une fois dans le bloc « 🤖 Clé API Claude » (stockée dans le
+  navigateur uniquement ; chaque génération coûte quelques centimes).
+- **Écriture manuelle** : remplir le formulaire avec la syntaxe simplifiée
+  (aide intégrée) et prévisualiser avec le vrai design.
+
+Dans les deux cas, « 🚀 Publier » committe l'article + `articles.js`
 directement dans le dépôt via l'API GitHub, et Pages redéploie tout seul.
 
 Premier usage : créer un jeton *fine-grained* sur GitHub

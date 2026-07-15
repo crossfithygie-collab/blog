@@ -130,6 +130,15 @@
       border-radius: 4px;
       padding: 1px 5px;
     }
+    .generation {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-left: 5px solid var(--accent);
+      border-radius: var(--radius-m);
+      padding: var(--s-4) var(--s-4) var(--s-2);
+      margin-bottom: var(--s-6);
+      box-shadow: var(--shadow-1);
+    }
     #apercu {
       display: none;
       border-top: 2px dashed var(--border);
@@ -175,6 +184,35 @@
       <button type="button" class="btn" id="btnJeton">Enregistrer le jeton</button>
       <button type="button" class="btn" id="btnJetonOubli">Oublier</button>
     </details>
+
+    <!-- Clé API Claude (stockée uniquement dans CE navigateur) -->
+    <details class="jeton" id="blocCle">
+      <summary>🤖 Clé API Claude</summary>
+      <p>Crée une clé sur <a href="https://console.anthropic.com/settings/keys" target="_blank" rel="noopener">console.anthropic.com</a>
+      et colle-la ici pour activer la génération d'articles.
+      Elle reste stockée dans ce navigateur uniquement.</p>
+      <div class="admin-field">
+        <label for="cle">Clé API</label>
+        <input type="password" id="cle" autocomplete="off" placeholder="sk-ant-…">
+      </div>
+      <button type="button" class="btn" id="btnCle">Enregistrer la clé</button>
+      <button type="button" class="btn" id="btnCleOubli">Oublier</button>
+    </details>
+
+    <!-- Génération d'un article par Claude -->
+    <section class="generation" aria-label="Génération d'article">
+      <div class="admin-field">
+        <label for="sujet">✨ Sujet de l'article</label>
+        <input type="text" id="sujet" placeholder="La créatine pour un cycle force">
+      </div>
+      <div class="admin-field">
+        <label for="consignes">Consignes (optionnel)</label>
+        <input type="text" id="consignes" placeholder="Angle, longueur, point à traiter absolument…">
+      </div>
+      <div class="admin-actions" style="margin-top: 0;">
+        <button type="button" class="btn primaire" id="btnGenerer">✨ Générer l'article</button>
+      </div>
+    </section>
 
     <details class="aide">
       <summary>✍️ Syntaxe du contenu</summary>
@@ -258,6 +296,7 @@ Un paragraphe avec un ==chiffre surligné==.
       var DEPOT = "crossfithygie-collab/blog";
       var API = "https://api.github.com/repos/" + DEPOT + "/contents/";
       var CLE_JETON = "carnet_jeton_github";
+      var CLE_CLAUDE = "carnet_cle_claude";
       var CLE_BROUILLON = "carnet_brouillon";
       var CHAMPS = ["titre", "rubrique", "emoji", "resume", "chapo", "kicker", "tags", "contenu"];
 
@@ -681,6 +720,117 @@ Un paragraphe avec un ==chiffre surligné==.
           btn.disabled = false;
         }
       }
+
+      /* ======================================================
+         Génération de l'article par Claude (API Anthropic,
+         appel direct depuis le navigateur). Le résultat remplit
+         le formulaire : relecture / retouches, puis Publier.
+         ====================================================== */
+      function promptGeneration(sujet, consignes, rubriques) {
+        return "Tu écris pour « Carnet de bord », le blog personnel d'un coach et gérant de salle de CrossFit. " +
+          "Ton : tutoiement, direct, concret, imagé mais rigoureux ; public : pratiquants et coachs. " +
+          "Contenu plausible et honnête, chiffres réalistes, pas de promesses miracles.\n\n" +
+          "SUJET DE L'ARTICLE : " + sujet + "\n" +
+          (consignes ? "CONSIGNES SUPPLÉMENTAIRES : " + consignes + "\n" : "") +
+          "RUBRIQUES EXISTANTES (réutilise-en une si elle colle, chaîne identique) : " +
+          (rubriques.length ? rubriques.join(" · ") : "aucune") + "\n\n" +
+          "Le champ `contenu` utilise cette syntaxe (une directive par ligne, blocs séparés par des lignes vides) :\n" +
+          "- `## Label | Titre` : section (numérotée automatiquement)\n" +
+          "- `==texte==` surligné bleu, `==!texte==` rouge (piège/danger), `==+texte==` vert (bénéfice)\n" +
+          "- `*italique*`, `[texte](https://url)`\n" +
+          "- `> citation` : pull-quote (une idée forte reformulée)\n" +
+          "- `!tip Conseil actionnable`\n" +
+          "- `!chiffre VALEUR | LABEL COURT | Légende explicative` (tons : `!chiffre!` rouge, `!chiffre+` vert, `!chiffre~` jaune)\n" +
+          "- `!faire item ; item` puis `!eviter item ; item`\n" +
+          "- `!recap Titre | Clé => Valeur ; Clé => Valeur`\n" +
+          "- `!source Label | https://url`\n\n" +
+          "Attendu : 700 à 1100 mots, 4 à 6 sections, un paragraphe d'intro AVANT la première section, " +
+          "2 à 4 `!chiffre` de tons variés, 1 `!tip`, 1 comparatif faire/éviter, 1 `!recap` en dernière section, " +
+          "1 ou 2 pull-quotes, des surlignages sur les faits marquants. " +
+          "Sources : uniquement des références dont tu es certain qu'elles existent (PubMed, etc.) ; " +
+          "en cas de doute, n'en mets pas plutôt que d'inventer une URL.\n\n" +
+          "Réponds UNIQUEMENT avec un objet JSON (aucun texte autour, pas de bloc de code) :\n" +
+          '{"titre": "…", "rubrique": "…", "emoji": "un seul emoji", "resume": "1-2 phrases pour la carte", ' +
+          '"chapo": "1-2 phrases d\'accroche", "kicker": "sur-titre court", "tags": ["3 à 5 tags"], "contenu": "…"}';
+      }
+
+      async function genererViaClaude() {
+        journalEl.innerHTML = "";
+        if (!localStorage.getItem(CLE_CLAUDE)) {
+          $("blocCle").open = true;
+          log("⚠ Enregistre d'abord ta clé API Claude (bloc 🤖 ci-dessus).", true);
+          return;
+        }
+        var sujet = $("sujet").value.trim();
+        if (!sujet) { log("⚠ Indique un sujet.", true); return; }
+
+        var btn = $("btnGenerer");
+        btn.disabled = true;
+        log("✨ Génération en cours (30 s à 1 min)…");
+
+        try {
+          var rep = await fetch("https://api.anthropic.com/v1/messages", {
+            method: "POST",
+            headers: {
+              "x-api-key": localStorage.getItem(CLE_CLAUDE),
+              "anthropic-version": "2023-06-01",
+              "anthropic-dangerous-direct-browser-access": "true",
+              "content-type": "application/json"
+            },
+            body: JSON.stringify({
+              model: "claude-sonnet-5",
+              max_tokens: 6000,
+              messages: [{ role: "user", content: promptGeneration(sujet, $("consignes").value.trim(), Object.keys(rubs)) }]
+            })
+          });
+          if (!rep.ok) {
+            var detail = "";
+            try { detail = (await rep.json()).error.message; } catch (e) { /* réponse sans JSON */ }
+            throw new Error("API Claude HTTP " + rep.status + (detail ? " — " + detail : ""));
+          }
+          var donnees = await rep.json();
+          var texte = donnees.content.map(function (b) { return b.text || ""; }).join("");
+          /* Extrait l'objet JSON même si le modèle a ajouté du texte autour */
+          var debut = texte.indexOf("{"), fin = texte.lastIndexOf("}");
+          if (debut === -1 || fin === -1) throw new Error("Réponse inexploitable (pas de JSON).");
+          var art = JSON.parse(texte.slice(debut, fin + 1));
+
+          $("titre").value = art.titre || sujet;
+          $("rubrique").value = art.rubrique || "";
+          $("emoji").value = art.emoji || "📝";
+          $("resume").value = art.resume || "";
+          $("chapo").value = art.chapo || "";
+          $("kicker").value = art.kicker || "";
+          $("tags").value = (art.tags || []).join(", ");
+          $("contenu").value = art.contenu || "";
+
+          /* Sauvegarde en brouillon + aperçu immédiat */
+          var b = {};
+          CHAMPS.forEach(function (ch) { b[ch] = $(ch).value; });
+          localStorage.setItem(CLE_BROUILLON, JSON.stringify(b));
+          afficherApercu();
+          log("✓ Article généré — relis l'aperçu ci-dessous, retouche ce que tu veux, puis 🚀 Publier.");
+          $("apercu").scrollIntoView({ behavior: "smooth" });
+        } catch (e) {
+          log("✗ " + e.message, true);
+        } finally {
+          btn.disabled = false;
+        }
+      }
+
+      $("btnGenerer").addEventListener("click", genererViaClaude);
+      $("btnCle").addEventListener("click", function () {
+        var v = $("cle").value.trim();
+        if (!v) { log("⚠ Colle une clé avant d'enregistrer.", true); return; }
+        localStorage.setItem(CLE_CLAUDE, v);
+        $("cle").value = "";
+        $("blocCle").open = false;
+        log("✓ Clé enregistrée dans ce navigateur.");
+      });
+      $("btnCleOubli").addEventListener("click", function () {
+        localStorage.removeItem(CLE_CLAUDE);
+        log("✓ Clé oubliée.");
+      });
 
       /* ======================================================
          Jeton, brouillon auto, datalist des rubriques
