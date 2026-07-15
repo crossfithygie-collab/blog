@@ -6,6 +6,11 @@
   <title>Carnet de bord — entraînement, récup &amp; salle</title>
   <meta name="description" content="Blog personnel : récupération, entraînement, nutrition et gestion d'une salle de sport.">
 
+  <!-- Thème auto clair/sombre (suit le réglage iPhone) -->
+  <meta name="color-scheme" content="light dark">
+  <meta name="theme-color" media="(prefers-color-scheme: light)" content="#f7f9fb">
+  <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#0c1519">
+
   <!-- Google Fonts : seule dépendance externe -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -57,6 +62,24 @@
           hash = (hash * 31 + nom.charCodeAt(i)) >>> 0; // hash déterministe
         }
         return PALETTE[hash % PALETTE.length];
+      }
+
+      /* Assombrit une couleur hex (facteur 0–1) pour les dégradés
+         de couverture générée */
+      function assombrir(hex, f) {
+        var n = parseInt(hex.slice(1), 16);
+        var r = Math.round(((n >> 16) & 255) * f);
+        var g = Math.round(((n >> 8) & 255) * f);
+        var b = Math.round((n & 255) * f);
+        return "rgb(" + r + "," + g + "," + b + ")";
+      }
+
+      /* Premier emoji déclaré pour une rubrique (optionnel) */
+      function emojiRubrique(nom) {
+        for (var i = 0; i < ARTICLES.length; i++) {
+          if (ARTICLES[i].rubrique === nom && ARTICLES[i].emoji) return ARTICLES[i].emoji;
+        }
+        return null;
       }
 
       /* Normalisation pour la recherche : minuscules + sans accents */
@@ -115,12 +138,23 @@
         btn.className = "filter-btn";
         btn.setAttribute("aria-pressed", String(rubriqueActive === valeur));
 
+        // Emoji de la rubrique si un article en déclare un,
+        // sinon pastille de couleur (le bouton « Tout » n'a ni l'un ni l'autre)
         if (couleur) {
-          var dot = document.createElement("span");
-          dot.className = "dot";
-          dot.style.background = couleur;
-          dot.setAttribute("aria-hidden", "true");
-          btn.appendChild(dot);
+          var emo = emojiRubrique(label);
+          if (emo) {
+            var e = document.createElement("span");
+            e.className = "emoji";
+            e.textContent = emo;
+            e.setAttribute("aria-hidden", "true");
+            btn.appendChild(e);
+          } else {
+            var dot = document.createElement("span");
+            dot.className = "dot";
+            dot.style.background = couleur;
+            dot.setAttribute("aria-hidden", "true");
+            btn.appendChild(dot);
+          }
         }
         btn.appendChild(document.createTextNode(label + " "));
 
@@ -181,25 +215,61 @@
         carte.className = "card";
         carte.href = a.url;
 
+        /* Couverture : image 16:9 si fournie, sinon dégradé de la
+           couleur de rubrique + emoji (aucune carte "nue") */
+        var cover = document.createElement("div");
+        if (a.image) {
+          cover.className = "card-cover";
+          var img = document.createElement("img");
+          img.src = a.image;
+          img.alt = a.imageAlt || ""; // vide = décorative
+          img.loading = "lazy";
+          cover.appendChild(img);
+        } else {
+          cover.className = "card-cover fallback";
+          var c = couleurRubrique(a.rubrique);
+          cover.style.background = "linear-gradient(135deg, " + c + ", " + assombrir(c, 0.6) + ")";
+          var emo = document.createElement("span");
+          emo.textContent = a.emoji || "📝";
+          emo.setAttribute("aria-hidden", "true");
+          cover.appendChild(emo);
+        }
+        // La couverture générée est purement décorative ; une image
+        // avec imageAlt reste exposée aux lecteurs d'écran
+        if (!a.image || !a.imageAlt) cover.setAttribute("aria-hidden", "true");
+        carte.appendChild(cover);
+
+        var corps = document.createElement("div");
+        corps.className = "card-body";
+        carte.appendChild(corps);
+
         var rub = document.createElement("span");
         rub.className = "card-rubrique";
-        var dot = document.createElement("span");
-        dot.className = "dot";
-        dot.style.background = couleurRubrique(a.rubrique);
-        dot.setAttribute("aria-hidden", "true");
-        rub.appendChild(dot);
+        if (a.emoji) {
+          var re = document.createElement("span");
+          re.className = "emoji";
+          re.textContent = a.emoji;
+          re.setAttribute("aria-hidden", "true");
+          rub.appendChild(re);
+        } else {
+          var dot = document.createElement("span");
+          dot.className = "dot";
+          dot.style.background = couleurRubrique(a.rubrique);
+          dot.setAttribute("aria-hidden", "true");
+          rub.appendChild(dot);
+        }
         rub.appendChild(document.createTextNode(a.rubrique));
-        carte.appendChild(rub);
+        corps.appendChild(rub);
 
         var titre = document.createElement("h2");
         titre.className = "card-title";
         titre.textContent = a.titre;
-        carte.appendChild(titre);
+        corps.appendChild(titre);
 
         var resume = document.createElement("p");
         resume.className = "card-resume";
         resume.textContent = a.resume;
-        carte.appendChild(resume);
+        corps.appendChild(resume);
 
         var meta = document.createElement("div");
         meta.className = "card-meta";
@@ -210,7 +280,7 @@
         var lecture = document.createElement("span");
         lecture.textContent = a.tempsLecture + " min de lecture";
         meta.appendChild(lecture);
-        carte.appendChild(meta);
+        corps.appendChild(meta);
 
         return carte;
       }

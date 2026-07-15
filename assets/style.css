@@ -1,10 +1,13 @@
 /* ============================================================
-   style.css — Design system partagé (mode clair éditorial)
-   Utilisé par l'accueil ET les articles.
+   style.css — Design system partagé (clair ET sombre)
+   Le thème suit automatiquement le réglage du système
+   (prefers-color-scheme) : aucune classe à gérer.
    ============================================================ */
 
 :root {
-  /* --- Fonds & surfaces --- */
+  color-scheme: light dark;
+
+  /* --- Fonds & surfaces (mode clair) --- */
   --bg: #f7f9fb;
   --surface: #ffffff;
   --border: #e3e9ee;
@@ -16,10 +19,27 @@
 
   /* --- Accents --- */
   --accent: #2ba8e0;        /* bleu glacier */
-  --accent-dark: #1b7fb0;   /* hover / liens */
-  --danger: #ff6b4a;        /* attention */
-  --positif: #2fb872;       /* positif */
-  --retenir: #e0a000;       /* à retenir */
+  --accent-dark: #1b7fb0;   /* hover / liens / kickers */
+  --danger: #cc3d1c;
+  --positif: #177a48;
+  --retenir: #8a6200;
+
+  /* --- Accents « pleins » pour surfaces décoratives --- */
+  --danger-vif: #ff6b4a;
+  --positif-vif: #2fb872;
+  --retenir-vif: #e0a000;
+
+  /* --- Surlignages feutre (mark) --- */
+  --mark-neutre: rgba(43, 168, 224, 0.38);
+  --mark-attention: rgba(255, 107, 74, 0.38);
+  --mark-positif: rgba(47, 184, 114, 0.38);
+
+  /* --- Pastille de filtre active --- */
+  --chip-active-bg: #0f1e24;
+  --chip-active-fg: #ffffff;
+
+  /* --- Halo décoratif du haut de page --- */
+  --halo: rgba(43, 168, 224, 0.12);
 
   /* --- Échelle d'espacement --- */
   --s-1: 4px;
@@ -32,15 +52,52 @@
 
   /* --- Rayons & ombres --- */
   --radius-s: 6px;
-  --radius-m: 12px;
-  --radius-l: 18px;
+  --radius-m: 14px;
+  --radius-l: 20px;
   --shadow-1: 0 1px 2px rgba(15, 30, 36, 0.05), 0 2px 8px rgba(15, 30, 36, 0.05);
-  --shadow-2: 0 2px 4px rgba(15, 30, 36, 0.06), 0 10px 28px rgba(15, 30, 36, 0.09);
+  --shadow-2: 0 2px 4px rgba(15, 30, 36, 0.06), 0 12px 32px rgba(15, 30, 36, 0.1);
 
   /* --- Typographie --- */
   --font-display: "Archivo Black", "Arial Black", sans-serif;
   --font-body: "Newsreader", Georgia, serif;
   --font-mono: "JetBrains Mono", "SFMono-Regular", Menlo, monospace;
+}
+
+/* ------------------------------------------------------------
+   Mode sombre : mêmes variables, valeurs recalibrées.
+   Tout le site (accueil + articles) bascule d'un coup.
+   ------------------------------------------------------------ */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #0c1519;
+    --surface: #152028;
+    --border: #26343d;
+
+    --text: #eaf1f5;
+    --text-2: #a7b8c1;
+    --text-3: #7a8b95;
+
+    /* Liens & kickers plus clairs pour rester lisibles sur fond sombre */
+    --accent: #4cbdf0;
+    --accent-dark: #6fcbf4;
+    --danger: #ff8a6b;
+    --positif: #4ccd8d;
+    --retenir: #f0b93a;
+
+    /* Surlignages un peu plus soutenus sur fond sombre */
+    --mark-neutre: rgba(43, 168, 224, 0.45);
+    --mark-attention: rgba(255, 107, 74, 0.45);
+    --mark-positif: rgba(47, 184, 114, 0.45);
+
+    /* Pastille active : inversée (claire sur fond sombre) */
+    --chip-active-bg: #eaf1f5;
+    --chip-active-fg: #0c1519;
+
+    --halo: rgba(43, 168, 224, 0.1);
+
+    --shadow-1: 0 1px 2px rgba(0, 0, 0, 0.35), 0 2px 8px rgba(0, 0, 0, 0.3);
+    --shadow-2: 0 2px 4px rgba(0, 0, 0, 0.4), 0 12px 32px rgba(0, 0, 0, 0.5);
+  }
 }
 
 /* ------------------------------------------------------------
@@ -58,7 +115,10 @@ html {
 
 body {
   margin: 0;
-  background: var(--bg);
+  background-color: var(--bg);
+  /* Halo doux derrière l'en-tête, pour réchauffer la page */
+  background-image: radial-gradient(900px 420px at 18% -8%, var(--halo), transparent 65%);
+  background-repeat: no-repeat;
   color: var(--text);
   font-family: var(--font-body);
   font-size: 19px;
@@ -93,7 +153,7 @@ a:hover {
 }
 
 ::selection {
-  background: rgba(43, 168, 224, 0.25);
+  background: rgba(43, 168, 224, 0.3);
 }
 
 /* ------------------------------------------------------------
@@ -206,11 +266,11 @@ time {
   color: var(--text);
 }
 
-/* État actif : fort contraste, lisible AA */
+/* État actif : fort contraste, lisible AA dans les deux modes */
 .filter-btn[aria-pressed="true"] {
-  background: var(--text);
-  border-color: var(--text);
-  color: #ffffff;
+  background: var(--chip-active-bg);
+  border-color: var(--chip-active-bg);
+  color: var(--chip-active-fg);
 }
 
 .filter-btn .count {
@@ -219,18 +279,27 @@ time {
 }
 
 .filter-btn[aria-pressed="true"] .count {
-  color: rgba(255, 255, 255, 0.65);
+  color: var(--chip-active-fg);
+  opacity: 0.65;
 }
 
-.filter-btn .dot {
+.filter-btn .dot,
+.card-rubrique .dot {
   width: 10px;
   height: 10px;
   border-radius: 50%;
   flex: none;
 }
 
+.filter-btn .emoji,
+.card-rubrique .emoji {
+  font-size: 15px;
+  line-height: 1;
+  flex: none;
+}
+
 /* ------------------------------------------------------------
-   Accueil — liste d'articles
+   Accueil — liste d'articles (cartes avec couverture)
    ------------------------------------------------------------ */
 .articles-list {
   max-width: 720px;
@@ -238,7 +307,7 @@ time {
   padding: 0 var(--s-5) var(--s-7);
   display: grid;
   grid-template-columns: 1fr; /* colonne unique, y compris mobile */
-  gap: var(--s-4);
+  gap: var(--s-5);
 }
 
 .card {
@@ -246,17 +315,49 @@ time {
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: var(--radius-l);
-  padding: var(--s-5);
+  overflow: hidden; /* la couverture épouse les coins arrondis */
   text-decoration: none;
   color: inherit;
   box-shadow: var(--shadow-1);
-  transition: box-shadow 0.15s ease, transform 0.15s ease;
+  transition: box-shadow 0.2s ease, transform 0.2s ease, border-color 0.2s ease;
 }
 
 .card:hover {
   box-shadow: var(--shadow-2);
-  transform: translateY(-2px);
+  transform: translateY(-3px);
+  border-color: var(--accent);
   color: inherit;
+}
+
+/* Couverture : image fournie… */
+.card-cover {
+  display: block;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  background: var(--border);
+}
+
+.card-cover img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.35s ease;
+}
+
+.card:hover .card-cover img {
+  transform: scale(1.04);
+}
+
+/* …ou couverture générée (dégradé rubrique + emoji) */
+.card-cover.fallback {
+  display: grid;
+  place-items: center;
+  font-size: 64px;
+}
+
+.card-body {
+  padding: var(--s-5);
 }
 
 .card-rubrique {
@@ -269,13 +370,6 @@ time {
   letter-spacing: 0.12em;
   text-transform: uppercase;
   color: var(--text-2);
-}
-
-.card-rubrique .dot {
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  flex: none;
 }
 
 .card-title {
@@ -291,6 +385,7 @@ time {
 .card-meta {
   display: flex;
   flex-wrap: wrap;
+  align-items: center;
   gap: var(--s-2) var(--s-4);
   color: var(--text-3);
   font-family: var(--font-mono);

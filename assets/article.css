@@ -62,6 +62,19 @@
 }
 
 /* ------------------------------------------------------------
+   Couverture d'article (image en tête, coins arrondis)
+   ------------------------------------------------------------ */
+.article-cover {
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+  border-radius: var(--radius-l);
+  margin-top: var(--s-5);
+  box-shadow: var(--shadow-1);
+}
+
+/* ------------------------------------------------------------
    2. Masthead : kicker + titre + chapô + byline
    ------------------------------------------------------------ */
 .masthead {
@@ -141,15 +154,15 @@ mark {
   color: inherit;
   padding: 0 0.15em;
   border-radius: 2px;
-  background: linear-gradient(to top, rgba(43, 168, 224, 0.38) 42%, transparent 42%);
+  background: linear-gradient(to top, var(--mark-neutre) 42%, transparent 42%);
 }
 
 mark.attention {
-  background: linear-gradient(to top, rgba(255, 107, 74, 0.38) 42%, transparent 42%);
+  background: linear-gradient(to top, var(--mark-attention) 42%, transparent 42%);
 }
 
 mark.positif {
-  background: linear-gradient(to top, rgba(47, 184, 114, 0.38) 42%, transparent 42%);
+  background: linear-gradient(to top, var(--mark-positif) 42%, transparent 42%);
 }
 
 /* ------------------------------------------------------------
@@ -165,9 +178,9 @@ mark.positif {
   box-shadow: var(--shadow-1);
 }
 
-.keydata.attention { border-left-color: var(--danger); }
-.keydata.positif   { border-left-color: var(--positif); }
-.keydata.retenir   { border-left-color: var(--retenir); }
+.keydata.attention { border-left-color: var(--danger-vif); }
+.keydata.positif   { border-left-color: var(--positif-vif); }
+.keydata.retenir   { border-left-color: var(--retenir-vif); }
 
 .keydata .mono-label {
   color: var(--text-3);
@@ -218,7 +231,7 @@ mark.positif {
   padding: var(--s-4) var(--s-5);
   background: var(--surface);
   border: 1px solid var(--border);
-  border-top: 4px solid var(--retenir);
+  border-top: 4px solid var(--retenir-vif);
   border-radius: var(--radius-m);
   box-shadow: var(--shadow-1);
 }
@@ -259,8 +272,8 @@ mark.positif {
   box-shadow: var(--shadow-1);
 }
 
-.comparatif .colonne.faire   { border-top: 4px solid var(--positif); }
-.comparatif .colonne.eviter  { border-top: 4px solid var(--danger); }
+.comparatif .colonne.faire   { border-top: 4px solid var(--positif-vif); }
+.comparatif .colonne.eviter  { border-top: 4px solid var(--danger-vif); }
 
 .comparatif h3 {
   font-family: var(--font-mono);

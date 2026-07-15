@@ -14,7 +14,10 @@ const ARTICLES = [
     resume: "Ce que dit la science récente de l'immersion froide, relu pour un cycle force.",
     url: "articles/bains-froids.html",
     tempsLecture: 6,               // minutes
-    tags: ["froid", "récupération", "hypertrophie"]
+    tags: ["froid", "récupération", "hypertrophie"],
+    emoji: "🧊",                   // optionnel : pastille de rubrique et couverture générée
+    image: "assets/covers/bains-froids.svg",  // optionnel : couverture 16:9 (sinon dégradé + emoji)
+    imageAlt: "Un petit monstre vert détendu dans un bain glacé, les mains posées sur le rebord entre les glaçons"
   }
   // ↓ Ajouter les nouveaux articles ici (l'ordre importe peu,
   //   la liste est triée par date décroissante à l'affichage).

@@ -1,0 +1,79 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 450" role="img" aria-label="Illustration : un petit monstre vert détendu dans un bain glacé, les mains posées sur le rebord entre les glaçons">
+  <defs>
+    <linearGradient id="ciel" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#aadcf5"/>
+      <stop offset="1" stop-color="#58b7e6"/>
+    </linearGradient>
+    <linearGradient id="cuve" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#f2fafe"/>
+      <stop offset="1" stop-color="#cfe9f7"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Ciel -->
+  <rect width="800" height="450" fill="url(#ciel)"/>
+
+  <!-- Flocons (asterisques dessinés, pas de police) -->
+  <g stroke="#ffffff" stroke-width="4" stroke-linecap="round" opacity="0.85">
+    <g transform="translate(110,90)"><line x1="-14" y1="0" x2="14" y2="0"/><line x1="0" y1="-14" x2="0" y2="14"/><line x1="-10" y1="-10" x2="10" y2="10"/><line x1="-10" y1="10" x2="10" y2="-10"/></g>
+    <g transform="translate(668,70) scale(0.8)"><line x1="-14" y1="0" x2="14" y2="0"/><line x1="0" y1="-14" x2="0" y2="14"/><line x1="-10" y1="-10" x2="10" y2="10"/><line x1="-10" y1="10" x2="10" y2="-10"/></g>
+    <g transform="translate(590,170) scale(0.55)"><line x1="-14" y1="0" x2="14" y2="0"/><line x1="0" y1="-14" x2="0" y2="14"/><line x1="-10" y1="-10" x2="10" y2="10"/><line x1="-10" y1="10" x2="10" y2="-10"/></g>
+    <g transform="translate(180,190) scale(0.6)"><line x1="-14" y1="0" x2="14" y2="0"/><line x1="0" y1="-14" x2="0" y2="14"/><line x1="-10" y1="-10" x2="10" y2="10"/><line x1="-10" y1="10" x2="10" y2="-10"/></g>
+    <circle cx="260" cy="70" r="5" fill="#ffffff" stroke="none"/>
+    <circle cx="530" cy="105" r="4" fill="#ffffff" stroke="none"/>
+    <circle cx="720" cy="200" r="5" fill="#ffffff" stroke="none"/>
+    <circle cx="70" cy="240" r="4" fill="#ffffff" stroke="none"/>
+  </g>
+
+  <!-- Petit monstre vert qui se prélasse dans le bain glacé -->
+  <g>
+    <!-- tête -->
+    <circle cx="400" cy="192" r="66" fill="#57c785"/>
+    <!-- deux antennes rigolotes -->
+    <path d="M372 134 q-8 -22 -24 -28" stroke="#57c785" stroke-width="10" fill="none" stroke-linecap="round"/>
+    <path d="M428 134 q8 -22 24 -28" stroke="#57c785" stroke-width="10" fill="none" stroke-linecap="round"/>
+    <circle cx="344" cy="102" r="9" fill="#6dd497"/>
+    <circle cx="456" cy="102" r="9" fill="#6dd497"/>
+    <!-- yeux -->
+    <ellipse cx="376" cy="184" rx="15" ry="17" fill="#ffffff"/>
+    <ellipse cx="424" cy="184" rx="15" ry="17" fill="#ffffff"/>
+    <circle cx="378" cy="188" r="6.5" fill="#123028"/>
+    <circle cx="422" cy="188" r="6.5" fill="#123028"/>
+    <!-- sourire détendu -->
+    <path d="M382 222 q18 14 36 0" stroke="#123028" stroke-width="6" fill="none" stroke-linecap="round"/>
+    <!-- joues -->
+    <circle cx="352" cy="212" r="9" fill="#3da868" opacity="0.55"/>
+    <circle cx="448" cy="212" r="9" fill="#3da868" opacity="0.55"/>
+  </g>
+
+  <!-- Cuve -->
+  <rect x="180" y="252" width="440" height="150" rx="30" fill="url(#cuve)" stroke="#b7dcf0" stroke-width="4"/>
+  <!-- Eau -->
+  <ellipse cx="400" cy="262" rx="204" ry="34" fill="#6cc7f2" stroke="#4cb0e4" stroke-width="4"/>
+  <path d="M230 262 q28 -12 56 0 t56 0 t56 0 t56 0 t56 0 t56 0" fill="none" stroke="#bfe9fb" stroke-width="6" stroke-linecap="round"/>
+
+  <!-- Glaçons flottants -->
+  <g fill="#ffffff" stroke="#bfe4f6" stroke-width="4">
+    <rect x="268" y="238" width="44" height="40" rx="9" transform="rotate(-10 290 258)"/>
+    <rect x="330" y="246" width="34" height="32" rx="8" transform="rotate(12 347 262)"/>
+    <rect x="506" y="240" width="42" height="38" rx="9" transform="rotate(8 527 259)"/>
+    <rect x="452" y="250" width="28" height="26" rx="7" transform="rotate(-14 466 263)"/>
+  </g>
+
+  <!-- Mains posées sur le rebord -->
+  <g fill="#57c785">
+    <ellipse cx="308" cy="256" rx="20" ry="14"/>
+    <ellipse cx="492" cy="256" rx="20" ry="14"/>
+    <path d="M296 262 v6 M308 264 v7 M320 262 v6 M480 262 v6 M492 264 v7 M504 262 v6" stroke="#3da868" stroke-width="4" stroke-linecap="round" fill="none"/>
+  </g>
+
+  <!-- Vapeur froide -->
+  <g fill="none" stroke="#ffffff" stroke-width="6" stroke-linecap="round" opacity="0.8">
+    <path d="M226 216 q-10 -18 4 -32"/>
+    <path d="M584 210 q12 -18 -2 -34"/>
+  </g>
+
+  <!-- Sol -->
+  <rect x="0" y="398" width="800" height="52" fill="#3e97c9"/>
+  <ellipse cx="400" cy="402" rx="260" ry="14" fill="#2f82b3" opacity="0.6"/>
+</svg>

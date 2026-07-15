@@ -8,12 +8,18 @@ Fonctionne en local (double-clic sur `index.html`, protocole `file://`) comme su
 ```
 /index.html                  → accueil : liste + filtres par rubrique + recherche
 /articles.js                 → tableau ARTICLES (source de vérité des métadonnées)
-/assets/style.css            → design system partagé
+/assets/style.css            → design system partagé (clair + sombre automatique)
 /assets/article.css          → styles du gabarit d'article
+/assets/covers/              → couvertures d'articles (SVG/images locales, 16:9)
 /articles/bains-froids.html  → article de référence (gabarit complet)
 /README.md                   → ce fichier
 /.nojekyll                   → désactive le traitement Jekyll sur GitHub Pages
 ```
+
+Le thème clair/sombre suit automatiquement le réglage du téléphone
+(`prefers-color-scheme`) : rien à configurer, tout passe par les variables
+CSS de `assets/style.css` (et les `<meta name="theme-color">` pour la barre
+Safari sur iPhone).
 
 ## 1. Ajouter un article
 
@@ -56,9 +62,19 @@ Ajouter une entrée au tableau `ARTICLES` :
   resume: "Une ou deux phrases affichées sur la carte d'accueil.",
   url: "articles/sommeil-profond.html",
   tempsLecture: 5,                        // minutes
-  tags: ["sommeil", "récupération"]       // utilisés par la recherche
+  tags: ["sommeil", "récupération"],      // utilisés par la recherche
+  emoji: "😴",                            // optionnel : pastille + couverture générée
+  image: "assets/covers/sommeil-profond.svg",  // optionnel : couverture 16:9
+  imageAlt: "Description de l'illustration"    // avec image, pour l'accessibilité
 }
 ```
+
+**Couvertures** : déposer un visuel **16:9** (SVG ou image) dans `assets/covers/`,
+nommé comme l'`id` de l'article. Sans champ `image`, la carte reçoit
+automatiquement une couverture générée : dégradé de la couleur de la rubrique
++ l'`emoji` de l'article (ou 📝 par défaut) — aucun article n'a de carte « nue ».
+Pour l'afficher aussi en tête d'article, reprendre la balise
+`<img class="article-cover" …>` du gabarit (chemin préfixé `../`).
 
 C'est tout. Les rubriques, les compteurs, les couleurs de pastille et les filtres
 sont déduits automatiquement du tableau — rien d'autre à modifier.
