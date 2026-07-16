@@ -22,8 +22,8 @@ const ARTICLES = [
       "fidélisation"
     ],
     "emoji": "📈",
-    "image": "assets/covers/defaut.svg",
-    "imageAlt": "Barre olympique chargée posée au sol d'une salle de CrossFit"
+    "image": "assets/covers/defaut.jpg",
+    "imageAlt": "Barre olympique et disques dans une salle de CrossFit"
   },
   {
     "id": "se-fixer-des-objectifs-qui-font-vraiment-avancer",
