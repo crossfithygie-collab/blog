@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Budget bébé">
+<meta name="theme-color" content="#FBF8FD">
+<title>Budget bébé</title>
+<link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 180'%3E%3Crect width='180' height='180' fill='%23E9DEF8'/%3E%3Ccircle cx='90' cy='78' r='30' fill='%23F0C36D'/%3E%3Cpath d='M50 150c0-22 18-40 40-40s40 18 40 40z' fill='%23F0C36D'/%3E%3C/svg%3E">
+<style>
+:root{
+  --ink:#4A4459;
+  --paper:#FBF8FD;
+  --muted:#9C95AC;
+  --line:#EDE6F2;
+  --gold:#F0C36D;
+  --sage:#9FD1BC;
+  --clay:#F09A93;
+  --lilac:#C9B8E8;
+  --sky:#A8CDEA;
+  --card:#FFFFFF;
+  --r:18px;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;padding:0}
+body{
+  background:var(--paper);color:var(--ink);
+  font-family:ui-rounded,'SF Pro Rounded',-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif;
+  font-size:16px;line-height:1.45;
+  padding:env(safe-area-inset-top) 0 calc(78px + env(safe-area-inset-bottom));
+  -webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:620px;margin:0 auto;padding:0 18px}
+h1{font-size:1.35rem;margin:18px 0 2px;letter-spacing:-.02em}
+h2{font-size:.78rem;text-transform:uppercase;letter-spacing:.12em;color:var(--muted);margin:26px 0 10px;font-weight:600}
+.sub{color:var(--muted);font-size:.85rem;margin:0 0 4px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:16px;margin-bottom:12px;box-shadow:0 1px 2px rgba(90,70,120,.04)}
+.hero{background:linear-gradient(140deg,#E9DEF8 0%,#DCEBF7 100%);color:var(--ink);border:1px solid #E3D8F2;padding:22px}
+.hero .lbl{color:#7E7391}
+.hero .big{font-size:2.5rem;font-weight:700;letter-spacing:-.03em;font-variant-numeric:tabular-nums;line-height:1.1}
+.hero .lbl{font-size:.75rem;text-transform:uppercase;letter-spacing:.12em;opacity:.6}
+.split{display:flex;gap:12px}
+.split>div{flex:1}
+.mono{font-variant-numeric:tabular-nums}
+.row{display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid var(--line)}
+.row:last-child{border-bottom:none}
+.row .grow{flex:1;min-width:0}
+.row .ttl{font-weight:600;font-size:.95rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.row .meta{color:var(--muted);font-size:.78rem}
+.amt{font-weight:700;font-variant-numeric:tabular-nums;white-space:nowrap}
+.dot{width:10px;height:10px;border-radius:50%;flex:none}
+.chip{display:inline-block;padding:5px 11px;border-radius:99px;border:1px solid var(--line);background:var(--card);font-size:.8rem;margin:0 6px 6px 0;cursor:pointer}
+.chip.on{background:var(--lilac);color:#463C5C;border-color:var(--lilac);font-weight:600}
+input,select,textarea,button{font:inherit;color:inherit}
+input,select{width:100%;padding:11px 12px;border:1px solid var(--line);border-radius:10px;background:var(--card);margin-bottom:10px}
+input:focus,select:focus{outline:2px solid #9B86C7;outline-offset:1px}
+label{font-size:.78rem;color:var(--muted);display:block;margin-bottom:4px}
+.btn{width:100%;padding:14px;border:none;border-radius:14px;background:var(--lilac);color:#42385A;font-weight:600;cursor:pointer}
+.btn.ghost{background:#F6F1FB;border:1px solid var(--line);color:var(--ink)}
+.btn.warn{background:#FBDDDA;color:#9C4A43}
+.bar{height:10px;background:#F0EBF5;border-radius:99px;overflow:hidden;margin-top:8px}
+.bar>i{display:block;height:100%;border-radius:99px}
+.tabs{position:fixed;bottom:0;left:0;right:0;background:rgba(251,248,253,.92);backdrop-filter:blur(14px);border-top:1px solid var(--line);display:flex;padding-bottom:env(safe-area-inset-bottom);z-index:20}
+.tabs button{flex:1;background:none;border:none;padding:12px 4px;color:var(--muted);font-size:.68rem;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:3px}
+.tabs button.on{color:var(--ink);font-weight:600}
+.tabs svg{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.view{display:none}
+.view.on{display:block}
+.empty{text-align:center;color:var(--muted);padding:36px 16px;font-size:.9rem}
+.del{background:none;border:none;color:var(--muted);padding:6px;cursor:pointer;font-size:1.1rem;line-height:1}
+table{width:100%;border-collapse:collapse;font-size:.85rem}
+th{text-align:left;font-size:.7rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);font-weight:600;padding:8px 4px;border-bottom:1px solid var(--line)}
+td{padding:9px 4px;border-bottom:1px solid var(--line);font-variant-numeric:tabular-nums}
+td.r,th.r{text-align:right}
+.spark{display:flex;align-items:flex-end;gap:4px;height:88px;margin-top:12px}
+.spark>u{flex:1;display:flex;flex-direction:column;justify-content:flex-end;height:100%;min-height:2px}
+.spark i{display:block;background:var(--gold);min-height:2px}
+.spark i.f{background:var(--sage);border-radius:4px 4px 0 0}
+.spark i.b{border-radius:4px 4px 0 0}
+.spark i.b.s{border-radius:0}
+.legend{display:flex;gap:14px;font-size:.72rem;color:var(--muted);margin-top:8px}
+.legend span{display:flex;align-items:center;gap:5px}
+.hint{font-size:.78rem;color:var(--muted);margin-top:-4px;margin-bottom:12px}
+@media(prefers-reduced-motion:no-preference){.card{transition:transform .15s}}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+
+<!-- ACCUEIL -->
+<section class="view on" id="v-home">
+  <h1>Budget bébé</h1>
+  <p class="sub" id="periodLabel"></p>
+
+  <div class="card hero">
+    <div class="lbl">Dépensé ce mois</div>
+    <div class="big" id="hMonth">—</div>
+    <div class="bar" style="background:rgba(255,255,255,.7)"><i id="hBar" style="background:var(--gold);width:0%"></i></div>
+    <div style="display:flex;justify-content:space-between;font-size:.78rem;opacity:.65;margin-top:7px">
+      <span id="hBudget"></span><span id="hLeft"></span>
+    </div>
+  </div>
+
+  <div class="split">
+    <div class="card">
+      <div class="lbl" style="font-size:.7rem;color:var(--muted);text-transform:uppercase;letter-spacing:.1em">Total dépensé</div>
+      <div class="mono" style="font-size:1.4rem;font-weight:700" id="hTotal">—</div>
+    </div>
+    <div class="card">
+      <div class="lbl" style="font-size:.7rem;color:var(--muted);text-transform:uppercase;letter-spacing:.1em">Moy. / mois</div>
+      <div class="mono" style="font-size:1.4rem;font-weight:700" id="hAvg">—</div>
+    </div>
+  </div>
+
+  <h2>Ce mois par catégorie</h2>
+  <div class="card" id="homeCats"></div>
+
+  <h2>Dernières dépenses</h2>
+  <div class="card" id="homeRecent"></div>
+</section>
+
+<!-- AJOUT -->
+<section class="view" id="v-add">
+  <h1>Ajouter</h1>
+  <p class="sub">Une dépense réelle, déjà payée.</p>
+  <div class="card">
+    <label>Montant (€)</label>
+    <input type="number" id="aAmt" inputmode="decimal" step="0.01" placeholder="0,00">
+    <label>Libellé</label>
+    <input type="text" id="aLbl" placeholder="Ex. paquet de couches T3">
+    <label>Catégorie</label>
+    <div id="aCats" style="margin-bottom:12px"></div>
+    <label>Date</label>
+    <input type="date" id="aDate">
+    <button class="btn" id="aSave">Enregistrer la dépense</button>
+  </div>
+
+  <h2>Dépenses récurrentes</h2>
+  <p class="hint">Elles alimentent les projections, mois après mois.</p>
+  <div class="card">
+    <label>Libellé</label>
+    <input type="text" id="rLbl" placeholder="Ex. couches + lingettes">
+    <label>Montant mensuel (€)</label>
+    <input type="number" id="rAmt" inputmode="decimal" step="0.01" placeholder="0,00">
+    <label>Catégorie</label>
+    <select id="rCat"></select>
+    <button class="btn ghost" id="rSave">Ajouter la récurrence</button>
+  </div>
+  <div class="card" id="recList"></div>
+
+  <h2>Achats planifiés</h2>
+  <p class="hint">Ponctuels, à une date future. Comptés une seule fois.</p>
+  <div class="card">
+    <label>Libellé</label>
+    <input type="text" id="pLbl" placeholder="Ex. siège auto groupe 1">
+    <label>Montant (€)</label>
+    <input type="number" id="pAmt" inputmode="decimal" step="0.01" placeholder="0,00">
+    <label>Catégorie</label>
+    <select id="pCat"></select>
+    <label>Prévu le</label>
+    <input type="date" id="pDate">
+    <button class="btn ghost" id="pSave">Ajouter l'achat</button>
+  </div>
+  <div class="card" id="planList"></div>
+</section>
+
+<!-- PROJECTION -->
+<section class="view" id="v-proj">
+  <h1>Projection</h1>
+  <p class="sub">Récurrent + achats planifiés, à partir de ce mois.</p>
+
+  <div style="margin-bottom:12px">
+    <span class="chip on" data-h="12">12 mois</span>
+    <span class="chip" data-h="24">24 mois</span>
+  </div>
+
+  <div class="card hero">
+    <div class="lbl">Total projeté <span id="pHz">12 mois</span></div>
+    <div class="big" id="pTotal">—</div>
+    <div style="font-size:.8rem;opacity:.65;margin-top:4px" id="pAvgLine"></div>
+  </div>
+
+  <div class="card">
+    <div class="spark" id="pSpark"></div>
+    <div class="legend">
+      <span><i class="dot" style="background:var(--gold)"></i>Récurrent</span>
+      <span><i class="dot" style="background:var(--sage)"></i>Achats planifiés</span>
+    </div>
+  </div>
+
+  <h2>Détail mensuel</h2>
+  <div class="card" style="padding:6px 16px">
+    <table>
+      <thead><tr><th>Mois</th><th class="r">Récurrent</th><th class="r">Planifié</th><th class="r">Total</th></tr></thead>
+      <tbody id="pTable"></tbody>
+    </table>
+  </div>
+</section>
+
+<!-- BUDGETS -->
+<section class="view" id="v-budget">
+  <h1>Budgets</h1>
+  <p class="sub">Cible mensuelle par catégorie. Laisse à 0 pour ignorer.</p>
+  <div class="card" id="budForm"></div>
+  <button class="btn" id="budSave">Enregistrer les budgets</button>
+
+  <h2>Suivi du mois</h2>
+  <div class="card" id="budTrack"></div>
+
+  <h2>Données</h2>
+  <div class="card">
+    <button class="btn ghost" id="expBtn" style="margin-bottom:10px">Exporter en JSON</button>
+    <button class="btn warn" id="wipeBtn">Tout effacer</button>
+  </div>
+</section>
+
+</div>
+
+<nav class="tabs">
+  <button class="on" data-v="home"><svg viewBox="0 0 24 24"><path d="M3 10l9-7 9 7v10a1 1 0 01-1 1h-5v-6H9v6H4a1 1 0 01-1-1z"/></svg>Accueil</button>
+  <button data-v="add"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>Ajouter</button>
+  <button data-v="proj"><svg viewBox="0 0 24 24"><path d="M3 20h18M6 16l4-5 3.5 3L19 7"/></svg>Projection</button>
+  <button data-v="budget"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 2"/></svg>Budgets</button>
+</nav>
+
+<script>
+const CATS=[
+ {id:'couches',n:'Couches & hygiène',c:'#F0C36D'},
+ {id:'alim',n:'Alimentation',c:'#9FD1BC'},
+ {id:'vet',n:'Vêtements',c:'#F09A93'},
+ {id:'sante',n:'Santé',c:'#A8CDEA'},
+ {id:'mat',n:'Matériel & mobilier',c:'#C9B8E8'},
+ {id:'garde',n:'Garde & crèche',c:'#F2B98E'},
+ {id:'loisirs',n:'Jouets & éveil',c:'#A9DCD5'},
+ {id:'autre',n:'Autre',c:'#CFC8DA'}
+];
+const CM=Object.fromEntries(CATS.map(c=>[c.id,c]));
+const K='budget-bebe-v1';
+let S={exp:[],rec:[],plan:[],bud:{}};
+try{const r=localStorage.getItem(K);if(r)S=Object.assign(S,JSON.parse(r));}catch(e){}
+const save=()=>{try{localStorage.setItem(K,JSON.stringify(S))}catch(e){alert("Impossible d'enregistrer. Le stockage du navigateur est peut-être plein.")}};
+const eur=n=>new Intl.NumberFormat('fr-FR',{style:'currency',currency:'EUR',maximumFractionDigits:n%1?2:0}).format(n||0);
+const mk=d=>d.slice(0,7);
+const now=new Date(), curM=now.toISOString().slice(0,7);
+const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,6);
+
+// nav
+document.querySelectorAll('.tabs button').forEach(b=>b.onclick=()=>{
+  document.querySelectorAll('.tabs button').forEach(x=>x.classList.remove('on'));
+  document.querySelectorAll('.view').forEach(x=>x.classList.remove('on'));
+  b.classList.add('on');document.getElementById('v-'+b.dataset.v).classList.add('on');
+  window.scrollTo(0,0);render();
+});
+
+// --- ajout dépense
+let selCat='couches';
+const aCats=document.getElementById('aCats');
+CATS.forEach(c=>{
+  const s=document.createElement('span');s.className='chip'+(c.id===selCat?' on':'');s.textContent=c.n;
+  s.onclick=()=>{selCat=c.id;[...aCats.children].forEach(x=>x.classList.remove('on'));s.classList.add('on')};
+  aCats.appendChild(s);
+});
+[['rCat'],['pCat']].forEach(([id])=>{
+  const el=document.getElementById(id);
+  CATS.forEach(c=>{const o=document.createElement('option');o.value=c.id;o.textContent=c.n;el.appendChild(o)});
+});
+const today=new Date().toISOString().slice(0,10);
+document.getElementById('aDate').value=today;
+document.getElementById('pDate').value=today;
+
+document.getElementById('aSave').onclick=()=>{
+  const a=parseFloat(document.getElementById('aAmt').value);
+  const l=document.getElementById('aLbl').value.trim();
+  const d=document.getElementById('aDate').value;
+  if(!(a>0))return alert("Entre un montant supérieur à 0.");
+  if(!d)return alert("Choisis une date.");
+  S.exp.unshift({id:uid(),a,l:l||CM[selCat].n,c:selCat,d});save();
+  document.getElementById('aAmt').value='';document.getElementById('aLbl').value='';
+  render();alert("Dépense enregistrée.");
+};
+document.getElementById('rSave').onclick=()=>{
+  const a=parseFloat(document.getElementById('rAmt').value),l=document.getElementById('rLbl').value.trim();
+  if(!(a>0))return alert("Entre un montant supérieur à 0.");
+  S.rec.push({id:uid(),a,l:l||'Récurrent',c:document.getElementById('rCat').value});save();
+  document.getElementById('rAmt').value='';document.getElementById('rLbl').value='';render();
+};
+document.getElementById('pSave').onclick=()=>{
+  const a=parseFloat(document.getElementById('pAmt').value),l=document.getElementById('pLbl').value.trim(),d=document.getElementById('pDate').value;
+  if(!(a>0))return alert("Entre un montant supérieur à 0.");
+  if(!d)return alert("Choisis une date prévue.");
+  S.plan.push({id:uid(),a,l:l||'Achat',c:document.getElementById('pCat').value,d});save();
+  document.getElementById('pAmt').value='';document.getElementById('pLbl').value='';render();
+};
+
+// --- budgets
+const budForm=document.getElementById('budForm');
+CATS.forEach(c=>{
+  const w=document.createElement('div');
+  w.innerHTML=`<label>${c.n}</label><input type="number" inputmode="decimal" step="1" data-b="${c.id}" placeholder="0">`;
+  budForm.appendChild(w);
+});
+document.getElementById('budSave').onclick=()=>{
+  budForm.querySelectorAll('input').forEach(i=>{const v=parseFloat(i.value)||0;if(v>0)S.bud[i.dataset.b]=v;else delete S.bud[i.dataset.b]});
+  save();render();alert("Budgets enregistrés.");
+};
+document.getElementById('expBtn').onclick=()=>{
+  const b=new Blob([JSON.stringify(S,null,2)],{type:'application/json'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='budget-bebe.json';a.click();
+};
+document.getElementById('wipeBtn').onclick=()=>{
+  if(confirm("Effacer toutes les dépenses, récurrences, achats et budgets ? Cette action est définitive.")){
+    S={exp:[],rec:[],plan:[],bud:{}};save();render();
+  }
+};
+let HZ=12;
+document.querySelectorAll('[data-h]').forEach(c=>c.onclick=()=>{
+  document.querySelectorAll('[data-h]').forEach(x=>x.classList.remove('on'));c.classList.add('on');
+  HZ=+c.dataset.h;render();
+});
+
+function del(kind,id){S[kind]=S[kind].filter(x=>x.id!==id);save();render();}
+window._del=del;
+
+function render(){
+  document.getElementById('periodLabel').textContent=
+    new Date().toLocaleDateString('fr-FR',{month:'long',year:'numeric'}).replace(/^./,m=>m.toUpperCase());
+
+  const monthExp=S.exp.filter(e=>mk(e.d)===curM);
+  const mSum=monthExp.reduce((s,e)=>s+e.a,0);
+  const total=S.exp.reduce((s,e)=>s+e.a,0);
+  const months=new Set(S.exp.map(e=>mk(e.d)));
+  const budTot=Object.values(S.bud).reduce((a,b)=>a+b,0);
+
+  document.getElementById('hMonth').textContent=eur(mSum);
+  document.getElementById('hTotal').textContent=eur(total);
+  document.getElementById('hAvg').textContent=eur(months.size?total/months.size:0);
+  const pct=budTot?Math.min(100,mSum/budTot*100):0;
+  document.getElementById('hBar').style.width=pct+'%';
+  document.getElementById('hBar').style.background=pct>=100?'var(--clay)':'var(--gold)';
+  document.getElementById('hBudget').textContent=budTot?`Budget ${eur(budTot)}`:'Aucun budget défini';
+  document.getElementById('hLeft').textContent=budTot?(mSum>budTot?`${eur(mSum-budTot)} de dépassement`:`${eur(budTot-mSum)} restants`):'';
+
+  // cats du mois
+  const hc=document.getElementById('homeCats');
+  const by={};monthExp.forEach(e=>by[e.c]=(by[e.c]||0)+e.a);
+  const ks=Object.keys(by).sort((a,b)=>by[b]-by[a]);
+  hc.innerHTML=ks.length?ks.map(k=>`<div class="row"><i class="dot" style="background:${CM[k].c}"></i><div class="grow"><div class="ttl">${CM[k].n}</div></div><div class="amt">${eur(by[k])}</div></div>`).join('')
+    :'<div class="empty">Rien ce mois-ci. Ajoute une dépense pour démarrer.</div>';
+
+  // récentes
+  const hr=document.getElementById('homeRecent');
+  const rec=[...S.exp].sort((a,b)=>b.d.localeCompare(a.d)).slice(0,8);
+  hr.innerHTML=rec.length?rec.map(e=>`<div class="row"><i class="dot" style="background:${CM[e.c].c}"></i><div class="grow"><div class="ttl">${esc(e.l)}</div><div class="meta">${new Date(e.d+'T12:00').toLocaleDateString('fr-FR',{day:'numeric',month:'short'})} · ${CM[e.c].n}</div></div><div class="amt">${eur(e.a)}</div><button class="del" onclick="_del('exp','${e.id}')">×</button></div>`).join('')
+    :'<div class="empty">Aucune dépense enregistrée.</div>';
+
+  // listes récurrent / planifié
+  const rl=document.getElementById('recList');
+  rl.innerHTML=S.rec.length?S.rec.map(r=>`<div class="row"><i class="dot" style="background:${CM[r.c].c}"></i><div class="grow"><div class="ttl">${esc(r.l)}</div><div class="meta">tous les mois · ${CM[r.c].n}</div></div><div class="amt">${eur(r.a)}</div><button class="del" onclick="_del('rec','${r.id}')">×</button></div>`).join('')
+    :'<div class="empty">Aucune récurrence. Les projections seront vides.</div>';
+  const pl=document.getElementById('planList');
+  pl.innerHTML=S.plan.length?[...S.plan].sort((a,b)=>a.d.localeCompare(b.d)).map(p=>`<div class="row"><i class="dot" style="background:${CM[p.c].c}"></i><div class="grow"><div class="ttl">${esc(p.l)}</div><div class="meta">${new Date(p.d+'T12:00').toLocaleDateString('fr-FR',{month:'long',year:'numeric'})} · ${CM[p.c].n}</div></div><div class="amt">${eur(p.a)}</div><button class="del" onclick="_del('plan','${p.id}')">×</button></div>`).join('')
+    :'<div class="empty">Aucun achat planifié.</div>';
+
+  // projection
+  const recSum=S.rec.reduce((s,r)=>s+r.a,0);
+  const rows=[];
+  for(let i=0;i<HZ;i++){
+    const d=new Date(now.getFullYear(),now.getMonth()+i,1);
+    const key=d.toISOString().slice(0,7);
+    const pv=S.plan.filter(p=>mk(p.d)===key).reduce((s,p)=>s+p.a,0);
+    rows.push({key,lbl:d.toLocaleDateString('fr-FR',{month:'short',year:'2-digit'}),r:recSum,p:pv});
+  }
+  const gTot=rows.reduce((s,x)=>s+x.r+x.p,0);
+  document.getElementById('pHz').textContent=HZ+' mois';
+  document.getElementById('pTotal').textContent=eur(gTot);
+  document.getElementById('pAvgLine').textContent=`Soit ${eur(gTot/HZ)} par mois en moyenne`;
+  const mx=Math.max(1,...rows.map(x=>x.r+x.p));
+  document.getElementById('pSpark').innerHTML=rows.map(x=>
+    `<u title="${x.lbl} · ${eur(x.r+x.p)}">`+
+    (x.p?`<i class="f" style="height:${(x.p/mx*100)}%"></i>`:'')+
+    `<i class="b${x.p?' s':''}" style="height:${(x.r/mx*100)}%"></i></u>`).join('');
+  document.getElementById('pTable').innerHTML=rows.map(x=>
+    `<tr><td>${x.lbl}</td><td class="r">${eur(x.r)}</td><td class="r">${x.p?eur(x.p):'—'}</td><td class="r"><b>${eur(x.r+x.p)}</b></td></tr>`).join('');
+
+  // budgets
+  budForm.querySelectorAll('input').forEach(i=>{if(document.activeElement!==i)i.value=S.bud[i.dataset.b]||''});
+  const bt=document.getElementById('budTrack');
+  const keys=Object.keys(S.bud);
+  bt.innerHTML=keys.length?keys.map(k=>{
+    const sp=by[k]||0,b=S.bud[k],p=Math.min(100,sp/b*100),over=sp>b;
+    return `<div style="padding:10px 0;border-bottom:1px solid var(--line)">
+      <div style="display:flex;justify-content:space-between;font-size:.9rem"><b>${CM[k].n}</b><span class="mono">${eur(sp)} / ${eur(b)}</span></div>
+      <div class="bar"><i style="width:${p}%;background:${over?'var(--clay)':CM[k].c}"></i></div>
+      <div class="meta" style="color:var(--muted);font-size:.75rem;margin-top:4px">${over?eur(sp-b)+' au-dessus de la cible':eur(b-sp)+' restants'}</div></div>`;
+  }).join(''):'<div class="empty">Définis une cible ci-dessus pour suivre ton mois.</div>';
+}
+function esc(s){return String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]))}
+render();
+</script>
+</body>
+</html>
